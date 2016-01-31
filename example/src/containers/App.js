@@ -9,6 +9,8 @@ const handleOnClick = () => {
   });
 }
 
-const Main = () => {
-  return <button onClick={handleOnClick}></button>
+const App = () => {
+  return <button onClick={handleOnClick}>save</button>;
 }
+
+export default App;

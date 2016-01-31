@@ -19674,6 +19674,10 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -19692,9 +19696,15 @@
 	  });
 	};
 
-	var Main = function Main() {
-	  return _react2.default.createElement('button', { onClick: handleOnClick });
+	var App = function App() {
+	  return _react2.default.createElement(
+	    'button',
+	    { onClick: handleOnClick },
+	    'save'
+	  );
 	};
+
+	exports.default = App;
 
 /***/ },
 /* 161 */
@@ -19720,11 +19730,9 @@
 
 	var _reactConfirm = __webpack_require__(278);
 
-	var _reactConfirm2 = _interopRequireDefault(_reactConfirm);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var confirm = (0, _reactConfirm2.default)(_Confirmation2.default);
+	var confirm = (0, _reactConfirm.createConfirmation)(_Confirmation2.default);
 
 /***/ },
 /* 162 */
@@ -19773,17 +19781,18 @@
 	    key: 'render',
 	    value: function render() {
 	      var _props = this.props;
-	      var _props$okButton = _props.okButton;
-	      var okButton = _props$okButton === undefined ? 'OK' : _props$okButton;
-	      var _props$cancelButton = _props.cancelButton;
-	      var cancelButton = _props$cancelButton === undefined ? 'キャンセル' : _props$cancelButton;
-	      var confirmation = _props.confirmation;
+	      var _props$okLabbel = _props.okLabbel;
+	      var okLabbel = _props$okLabbel === undefined ? 'OK' : _props$okLabbel;
+	      var _props$cancelLabel = _props.cancelLabel;
+	      var cancelLabel = _props$cancelLabel === undefined ? 'Cancel' : _props$cancelLabel;
 	      var title = _props.title;
+	      var confirmation = _props.confirmation;
+	      var show = _props.show;
+	      var proceed = _props.proceed;
+	      var dismiss = _props.dismiss;
+	      var cancel = _props.cancel;
 	      var _props$enableEscape = _props.enableEscape;
 	      var enableEscape = _props$enableEscape === undefined ? true : _props$enableEscape;
-	      var show = _props.show;
-	      var dismiss = _props.dismiss;
-	      var proceed = _props.proceed;
 
 	      return _react2.default.createElement(
 	        'div',
@@ -19791,7 +19800,7 @@
 	        _react2.default.createElement(
 	          _Modal2.default,
 	          { show: show, onHide: dismiss, backdrop: enableEscape ? true : 'static', keyboard: enableEscape },
-	          title && _react2.default.createElement(
+	          _react2.default.createElement(
 	            _Modal2.default.Header,
 	            null,
 	            _react2.default.createElement(
@@ -19810,13 +19819,13 @@
 	            null,
 	            _react2.default.createElement(
 	              _Button2.default,
-	              { onClick: dismiss },
-	              cancelButton
+	              { onClick: cancel },
+	              cancelLabel
 	            ),
 	            _react2.default.createElement(
 	              _Button2.default,
 	              { className: 'button-l', bsStyle: 'primary', onClick: proceed },
-	              okButton
+	              okLabbel
 	            )
 	          )
 	        )
@@ -19826,6 +19835,18 @@
 
 	  return Confirmation;
 	}(_react2.default.Component);
+
+	Confirmation.propTypes = {
+	  okLabbel: _react.PropTypes.string,
+	  cancelLabel: _react.PropTypes.string,
+	  title: _react.PropTypes.string,
+	  confirmation: _react.PropTypes.string,
+	  show: _react.PropTypes.bool,
+	  proceed: _react.PropTypes.func, // called when ok button is clicked.
+	  cancel: _react.PropTypes.func, // called when cancel button is clicked.
+	  dismiss: _react.PropTypes.func, // called when backdrop is clicked or escaped.
+	  enableEscape: _react.PropTypes.bool
+	};
 
 	exports.default = (0, _reactConfirm.confirmable)(Confirmation);
 
@@ -24869,9 +24890,10 @@
 
 	'use strict';
 
-	exports.__esModule = true;
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.createConfirmation = exports.confirmable = undefined;
 
 	var _confirmable = __webpack_require__(279);
 
@@ -24881,8 +24903,10 @@
 
 	var _createConfirmation2 = _interopRequireDefault(_createConfirmation);
 
-	exports.confirmable = _confirmable2['default'];
-	exports.createConfirmation = _createConfirmation2['default'];
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.confirmable = _confirmable2.default;
+	exports.createConfirmation = _createConfirmation2.default;
 
 /***/ },
 /* 279 */
@@ -24890,74 +24914,86 @@
 
 	'use strict';
 
-	exports.__esModule = true;
-
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
 
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	var confirmable = function confirmable(Component) {
-	  return (function (_React$Component) {
+	  return function (_React$Component) {
 	    _inherits(_class, _React$Component);
 
 	    function _class(props) {
 	      _classCallCheck(this, _class);
 
-	      _React$Component.call(this, props);
+	      var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(_class).call(this, props));
 
-	      this.state = {
+	      _this.state = {
 	        show: true
 	      };
+	      return _this;
 	    }
 
-	    _class.prototype.dismiss = function dismiss() {
-	      var _this = this;
+	    _createClass(_class, [{
+	      key: 'dismiss',
+	      value: function dismiss() {
+	        var _this2 = this;
 
-	      this.setState({
-	        show: false
-	      }, function () {
-	        _this.props.dispose();
-	      });
-	    };
+	        this.setState({
+	          show: false
+	        }, function () {
+	          _this2.props.dispose();
+	        });
+	      }
+	    }, {
+	      key: 'cancel',
+	      value: function cancel(value) {
+	        var _this3 = this;
 
-	    _class.prototype.cancel = function cancel(value) {
-	      var _this2 = this;
+	        this.setState({
+	          show: false
+	        }, function () {
+	          _this3.props.reject(value);
+	        });
+	      }
+	    }, {
+	      key: 'proceed',
+	      value: function proceed(value) {
+	        var _this4 = this;
 
-	      this.setState({
-	        show: false
-	      }, function () {
-	        _this2.props.reject(value);
-	      });
-	    };
-
-	    _class.prototype.proceed = function proceed(value) {
-	      var _this3 = this;
-
-	      this.setState({
-	        show: false
-	      }, function () {
-	        _this3.props.resolve(value);
-	      });
-	    };
-
-	    _class.prototype.render = function render() {
-	      return _react2['default'].createElement(Component, _extends({ proceed: this.proceed.bind(this), dismiss: this.dismiss.bind(this), show: this.state.show }, this.props));
-	    };
+	        this.setState({
+	          show: false
+	        }, function () {
+	          _this4.props.resolve(value);
+	        });
+	      }
+	    }, {
+	      key: 'render',
+	      value: function render() {
+	        return _react2.default.createElement(Component, _extends({ proceed: this.proceed.bind(this), cancel: this.cancel.bind(this), dismiss: this.dismiss.bind(this), show: this.state.show }, this.props));
+	      }
+	    }]);
 
 	    return _class;
-	  })(_react2['default'].Component);
+	  }(_react2.default.Component);
 	};
 
-	exports['default'] = confirmable;
-	module.exports = exports['default'];
+	exports.default = confirmable;
 
 /***/ },
 /* 280 */
@@ -24965,11 +25001,11 @@
 
 	'use strict';
 
-	exports.__esModule = true;
-
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
 	var _react = __webpack_require__(2);
 
@@ -24979,13 +25015,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var createConfirmation = function createConfirmation(Component) {
 	  return function (props) {
 	    var wrapper = document.body.appendChild(document.createElement('div'));
 
 	    var promise = new Promise(function (resolve, reject) {
 	      try {
-	        _reactDom2['default'].render(_react2['default'].createElement(Component, _extends({
+	        _reactDom2.default.render(_react2.default.createElement(Component, _extends({
 	          reject: reject,
 	          resolve: resolve,
 	          dispose: dispose
@@ -24998,7 +25036,7 @@
 
 	    function dispose() {
 	      setTimeout(function () {
-	        _reactDom2['default'].unmountComponentAtNode(wrapper);
+	        _reactDom2.default.unmountComponentAtNode(wrapper);
 	        setTimeout(function () {
 	          return wrapper.remove();
 	        });
@@ -25015,8 +25053,7 @@
 	  };
 	};
 
-	exports['default'] = createConfirmation;
-	module.exports = exports['default'];
+	exports.default = createConfirmation;
 
 /***/ }
 /******/ ]);

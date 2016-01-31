@@ -1,4 +1,4 @@
-import Confirmation from './Confirmation';
+import Confirmation from '../components/Confirmation';
 import reactConfirm from 'react-confirm';
 
 const confirm = reactConfirm(Confirmation);

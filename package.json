@@ -1,8 +1,12 @@
 {
   "name": "react-confirm",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "lib/index.js",
+  "files": [
+    "lib",
+    "src"
+  ],
   "scripts": {
     "clean": "rimraf lib",
     "build": "babel src --out-dir lib",

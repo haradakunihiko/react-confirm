@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "Confirmation.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "dependencies": {
     "react": "^0.14.7",
     "react-bootstrap": "^0.28.2",
-    "react-confirm": "git+https://github.com/haradakunihiko/react-confirm.git",
+    "react-confirm": "^0.1.0",
     "react-dom": "^0.14.7"
   }
 }

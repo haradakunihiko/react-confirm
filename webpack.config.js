@@ -3,12 +3,13 @@
 module.exports = {
   module: {
     loaders: [
-      { test: /\.js$/, loaders: ['babel-loader'], exclude: /node_modules/ }
+      {
+        // .jsxと.jsを対象にする
+        test: /\.jsx?$/,
+        // node_modulesを除く
+        exclude: /node_modules/,
+        loaders: ['babel-loader'],
+      }
     ]
-  },
-  output: {
-  },
-  resolve: {
-    extensions: ['', '.js']
   }
 };

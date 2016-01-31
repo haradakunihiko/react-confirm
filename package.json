@@ -2,7 +2,7 @@
   "name": "react-confirm",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "build:lib": "babel src --out-dir lib",
     "build:umd": "webpack src/index.js dist/reactConfirm.js",

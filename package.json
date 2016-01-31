@@ -8,7 +8,7 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "peerDependencies": {
     "react-dom": "^0.14.7"
   },
   "devDependencies": {

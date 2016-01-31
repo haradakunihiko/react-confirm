@@ -31,7 +31,7 @@ const confirmable = (Component) => class extends React.Component {
     });
   }
   render() {
-    return <Component proceed={::this.proceed} dismiss={::this.dismiss} show={this.state.show} {...this.props}/>
+    return <Component proceed={::this.proceed} cancel={::this.cancel} dismiss={::this.dismiss} show={this.state.show} {...this.props}/>
   }
 }
 

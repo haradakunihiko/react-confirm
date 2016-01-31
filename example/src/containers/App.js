@@ -1,5 +1,5 @@
 import React from 'react';
-import confirm from '../util/confirm';
+import confirm from 'util/confirm';
 
 const handleOnClick = () => {
   confirm('Are you sure?').then(() => {

@@ -1,4 +1,5 @@
 'use strict';
+var path = require('path');
 
 module.exports = {
   entry: [
@@ -8,12 +9,16 @@ module.exports = {
     path: './static/',
     filename: 'bundle.js'
   },
+  resolve: {
+    extensions: ['', '.js'],
+    root: [
+      path.join(__dirname, 'src'),
+    ]
+  },
   module: {
     loaders: [
       {
-        // .jsxと.jsを対象にする
-        test: /\.jsx?$/,
-        // node_modulesを除く
+        test: /\.js$/,
         exclude: /node_modules/,
         loaders: ['babel-loader'],
       }

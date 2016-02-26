@@ -1,7 +1,7 @@
 # react-confirm
 Small library which makes your Dialog component callable.
 
-This library does not provide any view component.
+This library does not provide any view component. Just add a functionality to be callable like `window.confirm`.
 
 In the example, react-bootstrap and material-ui are used with.
 
@@ -24,6 +24,8 @@ const YourDialog = ({show, proceed, dismiss, cancel, confirmation}) => {
     <button onClick={proceed}>OK</button>
   </Dialog>
 }
+
+// confirmable HOC pass props `show`, `dismiss`, `cancel` and `proceed` to your component.
 export default confirmable(YourDialog);
 ```
 
@@ -43,9 +45,11 @@ export default function(confirmation, options = {}) {
 import confirm from './confirm'
 confirm('Are you sure').then(
   () => {
+    // This will be called when `proceed` is called.
     console.log('proceed called');
   },
   () => {
+    // This will be called when `cancel` is called.
     console.log('cancel called');
   }
 )

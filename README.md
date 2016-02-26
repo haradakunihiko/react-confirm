@@ -17,7 +17,7 @@ In the example, react-bootstrap and material-ui are used with.
 import { confirmable } from 'react-confirm';
 import Dialog from 'something';
 
-const YourDialog = ({show, proceed, dismiss, cancel, confirmation}) => {
+const YourDialog = ({show, proceed, dismiss, cancel, confirmation, options}) => {
   <Dialog onHide={dismiss} show={show}>
     {confirmation}
     <button onClick={cancel}>CANCEL</button>
@@ -34,8 +34,13 @@ export default confirmable(YourDialog);
 import { createConfirmation } from 'react-confirm';
 import YourDialog from './YourDialog';
 
+// create confirm function
+const confirm = createConfirmation(Confirmation);
+
+// This is optional. But I recommend to define your confirm function easy to call.
 export default function(confirmation, options = {}) {
-  return confirm({ confirmation, ...options });
+  // You can pass whatever you want to you component. It will be just passed to your Component's props
+  return confirm({ confirmation, options });
 }
 
 ```
@@ -53,4 +58,5 @@ confirm('Are you sure').then(
     console.log('cancel called');
   }
 )
+// nothing will be called when `dismiss` is called.
 ```

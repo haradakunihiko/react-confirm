@@ -26,7 +26,7 @@
     "prepublish": "npm run clean && npm run build"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "peerDependencies": {
     "react-dom": "^0.14.7"
   },

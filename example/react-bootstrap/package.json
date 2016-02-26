@@ -24,9 +24,4 @@
     "react-confirm": "^0.1.0",
     "react-dom": "^0.14.7"
   },
-  "licenses": [
-    {
-      "type": "MIT"
-    }
-  ]
 }

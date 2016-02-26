@@ -65,7 +65,7 @@ confirm('Are you sure').then(
 // nothing will be called when `dismiss` is triggered.
 ```
 
-## try example
+## Try example
 
 ```
 cd example/react-bootstrap # or cd example/material-ui

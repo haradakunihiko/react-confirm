@@ -5,6 +5,8 @@ This library does not provide any view component. Just add a functionality to be
 
 In the example, react-bootstrap and material-ui are used with.
 
+## Motivation
+
 ## Useage
 1. create your dialog component.
 2. use `confirmable` to pass props that manage your dialog (optional)

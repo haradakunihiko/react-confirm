@@ -38,7 +38,7 @@ class ComplexConfirmation extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Input ref={::this.refCallback} type='text' />
-            <Button onClick={cancel}>キャンセル</Button>
+            <Button onClick={cancel}>Cancel</Button>
             <Button className='button-l' bsStyle="default" onClick={this.handleOnClick(1)}>1st</Button>
             <Button className='button-l' bsStyle="default" onClick={this.handleOnClick(2)}>2nd</Button>
             <Button className='button-l' bsStyle="default" onClick={this.handleOnClick(3)}>3rd</Button>

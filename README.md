@@ -20,8 +20,8 @@ import Dialog from 'something';
 const YourDialog = ({show, proceed, dismiss, cancel, confirmation, options}) => {
   <Dialog onHide={dismiss} show={show}>
     {confirmation}
-    <button onClick={cancel}>CANCEL</button>
-    <button onClick={proceed}>OK</button>
+    <button onClick={() => cancel('arguments will be passed to the callback')}>CANCEL</button>
+    <button onClick={() => proceed('same as cancel')}>OK</button>
   </Dialog>
 }
 
@@ -39,7 +39,7 @@ const confirm = createConfirmation(Confirmation);
 
 // This is optional. But I recommend to define your confirm function easy to call.
 export default function(confirmation, options = {}) {
-  // You can pass whatever you want to you component. It will be just passed to your Component's props
+  // You can pass whatever you want to the component. It will be just passed to your Component's props
   return confirm({ confirmation, options });
 }
 
@@ -49,14 +49,16 @@ export default function(confirmation, options = {}) {
 ```js
 import confirm from './confirm'
 confirm('Are you sure').then(
-  () => {
-    // This will be called when `proceed` is called.
+  (result) => {
+    // This will be called when `proceed` is triggered.
     console.log('proceed called');
+    console.log(result);
   },
-  () => {
-    // This will be called when `cancel` is called.
+  (result) => {
+    // This will be called when `cancel` is triggered.
     console.log('cancel called');
+    console.log(result)
   }
 )
-// nothing will be called when `dismiss` is called.
+// nothing will be called when `dismiss` is triggered.
 ```

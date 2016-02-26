@@ -7,7 +7,7 @@ In the example, react-bootstrap and material-ui are used with.
 
 ## Useage
 1. create your dialog component.
-2. use `confirmable` to make your component  (optional)
+2. use `confirmable` to pass props that manages your dialog (optional)
 3. create function by passing your confirmable component to `createConfirmation`
 4. call it!
 

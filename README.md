@@ -29,6 +29,13 @@ const YourDialog = ({show, proceed, dismiss, cancel, confirmation, options}) => 
 
 // confirmable HOC pass props `show`, `dismiss`, `cancel` and `proceed` to your component.
 export default confirmable(YourDialog);
+
+// or, use `confirmable` as decorator
+@confirmable
+class YourDialog extends React.Component {
+}
+
+
 ```
 
 ### create confirm function

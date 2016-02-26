@@ -3,6 +3,18 @@
   "version": "0.1.3",
   "description": "",
   "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haradakunihiko/react-confirm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/haradakunihiko/react-confirm/issues"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "confirm",
+  ],
   "homepage": "https://github.com/haradakunihiko/react-confirm",
   "files": [
     "lib",

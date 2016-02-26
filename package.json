@@ -3,6 +3,7 @@
   "version": "0.1.2",
   "description": "",
   "main": "lib/index.js",
+  "homepage": "https://github.com/haradakunihiko/react-confirm",
   "files": [
     "lib",
     "src"

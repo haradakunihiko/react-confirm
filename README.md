@@ -1,9 +1,9 @@
 # react-confirm
 Small library which makes your Dialog component callable.
 
-This library does not provide any view component. Just add a functionality to be callable like `window.confirm`.
+This library does not provide any view component. Just add a functionality to become callable like `window.confirm`.
 
-In the example, react-bootstrap and material-ui are used with.
+In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/example), [react-bootstrap](https://react-bootstrap.github.io/components.html#modals) and [material-ui](http://www.material-ui.com/#/components/dialog) are used with.
 
 ## Motivation
 
@@ -16,8 +16,9 @@ In the example, react-bootstrap and material-ui are used with.
 ### create confirmable component
 
 ```js
+import React from 'react';
 import { confirmable } from 'react-confirm';
-import Dialog from 'something';
+import Dialog from 'any-dialog-library'; // your chice. 
 
 const YourDialog = ({show, proceed, dismiss, cancel, confirmation, options}) => {
   <Dialog onHide={dismiss} show={show}>
@@ -25,6 +26,15 @@ const YourDialog = ({show, proceed, dismiss, cancel, confirmation, options}) => 
     <button onClick={() => cancel('arguments will be passed to the callback')}>CANCEL</button>
     <button onClick={() => proceed('same as cancel')}>OK</button>
   </Dialog>
+}
+
+YourDialog.propTypes = {
+  show: PropTypes.bool, // passed from confirmable 
+  proceed: PropTypes.func, // passed from confirmable 
+  cancel: PropTypes.func, // passed from confirmable 
+  dismiss: PropTypes.func, // passed from confirmable 
+  confirmation: PropTypes.string, // passed as arguments of your confirm function
+  optios: PropTypes.object // passed as arguments of your confirm function
 }
 
 // confirmable HOC pass props `show`, `dismiss`, `cancel` and `proceed` to your component.
@@ -44,11 +54,11 @@ import { createConfirmation } from 'react-confirm';
 import YourDialog from './YourDialog';
 
 // create confirm function
-const confirm = createConfirmation(Confirmation);
+const confirm = createConfirmation(YourDialog);
 
 // This is optional. But I recommend to define your confirm function easy to call.
 export default function(confirmation, options = {}) {
-  // You can pass whatever you want to the component. It will be just passed to your Component's props
+  // You can pass whatever you want to the component. It will be your Component's props
   return confirm({ confirmation, options });
 }
 
@@ -59,12 +69,12 @@ export default function(confirmation, options = {}) {
 import confirm from './confirm'
 confirm('Are you sure').then(
   (result) => {
-    // This will be called when `proceed` is triggered.
+    // `proceed` callback
     console.log('proceed called');
     console.log(result);
   },
   (result) => {
-    // This will be called when `cancel` is triggered.
+    // `cancel` callback
     console.log('cancel called');
     console.log(result)
   }

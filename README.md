@@ -29,12 +29,12 @@ const YourDialog = ({show, proceed, dismiss, cancel, confirmation, options}) => 
 }
 
 YourDialog.propTypes = {
-  show: PropTypes.bool, // passed from confirmable 
-  proceed: PropTypes.func, // passed from confirmable 
-  cancel: PropTypes.func, // passed from confirmable 
-  dismiss: PropTypes.func, // passed from confirmable 
-  confirmation: PropTypes.string, // passed as arguments of your confirm function
-  optios: PropTypes.object // passed as arguments of your confirm function
+  show: PropTypes.bool,           // from confirmable 
+  proceed: PropTypes.func,        // from confirmable 
+  cancel: PropTypes.func,         // from confirmable 
+  dismiss: PropTypes.func,        // from confirmable 
+  confirmation: PropTypes.string, // arguments of your confirm function
+  optios: PropTypes.object        // arguments of your confirm function
 }
 
 // confirmable HOC pass props `show`, `dismiss`, `cancel` and `proceed` to your component.

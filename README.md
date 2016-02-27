@@ -15,7 +15,7 @@ In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/exa
  - You can get returned values in the promise.
  - There is no limitation in the dialog. You can use input forms, multiple buttons, whatever you want (see [complex example](https://github.com/haradakunihiko/react-confirm/tree/master/example/react-bootstrap)).
 
-## Useage
+## Usage
 1. create your dialog component.
 2. apply `confirmable` to your component (optional, but usually recommended).
 3. create function with `createConfirmation` by passing your confirmable component.
@@ -24,9 +24,9 @@ In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/exa
 ### create confirmable component
 
 ```js
-import React from 'react';
+import React, {PropTypes} from 'react';
 import { confirmable } from 'react-confirm';
-import Dialog from 'any-dialog-library'; // your chice.
+import Dialog from 'any-dialog-library'; // your choice.
 
 const YourDialog = ({show, proceed, dismiss, cancel, confirmation, options}) => {
   <Dialog onHide={dismiss} show={show}>
@@ -42,7 +42,7 @@ YourDialog.propTypes = {
   cancel: PropTypes.func,         // from confirmable
   dismiss: PropTypes.func,        // from confirmable
   confirmation: PropTypes.string, // arguments of your confirm function
-  optios: PropTypes.object        // arguments of your confirm function
+  options: PropTypes.object        // arguments of your confirm function
 }
 
 // confirmable HOC pass props `show`, `dismiss`, `cancel` and `proceed` to your component.

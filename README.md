@@ -17,7 +17,7 @@ In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/exa
 
 ## Useage
 1. create your dialog component.
-2. apply `confirmable` to your component (optional).
+2. apply `confirmable` to your component (optional, but usually recommended).
 3. create function with `createConfirmation` by passing your confirmable component.
 4. call it!
 

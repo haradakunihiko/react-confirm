@@ -37,11 +37,11 @@ const YourDialog = ({show, proceed, dismiss, cancel, confirmation, options}) => 
 }
 
 YourDialog.propTypes = {
-  show: PropTypes.bool,           // from confirmable
-  proceed: PropTypes.func,        // from confirmable
-  cancel: PropTypes.func,         // from confirmable
-  dismiss: PropTypes.func,        // from confirmable
-  confirmation: PropTypes.string, // arguments of your confirm function
+  show: PropTypes.bool,            // from confirmable. indicates if the dialog is shown or not.
+  proceed: PropTypes.func,         // from confirmable. call to close the dialog with promise resolved.
+  cancel: PropTypes.func,          // from confirmable. call to close the dialog with promise rejected.
+  dismiss: PropTypes.func,         // from confirmable. call to only close the dialog.
+  confirmation: PropTypes.string,  // arguments of your confirm function
   options: PropTypes.object        // arguments of your confirm function
 }
 

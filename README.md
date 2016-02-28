@@ -6,13 +6,13 @@ This library does not provide any view component. Just adds a functionality to b
 In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/example), [react-bootstrap](https://react-bootstrap.github.io/components.html#modals) and [material-ui](http://www.material-ui.com/#/components/dialog) are used with.
 
 ## Motivation
- React is great. And I respect the concept to render the view reactively only by it's state. However, it easily becomes really complex to manage all states which are only necessary just temporarily like confirmation dialog. Is managing states which indicate the confirmation dialog is shown really important? Is it worth to manage them? I guess it is not always yes.
+ React is great. And I respect the concept to render the view reactively only by it's state. However, it easily becomes really complex to manage all states which are only necessary just temporarily like confirmation dialog. Is managing states which indicate the confirmation dialog is shown really important? Is it worth to manage them? I guess the answer is not always yes.
 
 ## What you can do
  With this library,
  - You can open a dialog component by calling function and it will be rendered outside your application. The function returns promise so that you can define callbacks to handle the confirmation result.
  - You can pass arguments to the function and use them inside the dialog component.
- - You can get returned values in the promise.
+ - You can get values from the component in the promise.
  - There is no limitation in the dialog. You can use input forms, multiple buttons, whatever you want (see [complex example](https://github.com/haradakunihiko/react-confirm/tree/master/example/react-bootstrap)).
 
 ## Usage

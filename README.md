@@ -6,7 +6,7 @@ This library does not provide any view component. Just adds a functionality to b
 In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/example), [react-bootstrap](https://react-bootstrap.github.io/components.html#modals) and [material-ui](http://www.material-ui.com/#/components/dialog) are used with.
 
 ## Motivation
- React is great. And I respect the concept to render the view reactively only by it's state. However, it easily becomes really complex to manage all states which are only necessary just temporarily like confirmation dialog. Is managing states which indicate the confirmation dialog is shown really important? Is it worth to manage them? I guess the answer is not always yes.
+ React is great. And I respect the concept to render the view reactively only by it's state. However, it easily becomes really complex to manage all states which are only needed just temporarily like confirmation dialog. The question is... Is it worth to manage them inside your app? I guess the answer is not always yes.
 
 ## What you can do
  With this library,

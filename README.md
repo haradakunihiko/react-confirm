@@ -1,7 +1,7 @@
 # react-confirm
 Small library which makes your Dialog component callable.
 
-This library does not provide any view component. Just adds a functionality to become callable like `window.confirm`.
+This library does not provide any view component. Just adds a functionality to be callable like `window.confirm`.
 
 In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/example), [react-bootstrap](https://react-bootstrap.github.io/components.html#modals) and [material-ui](http://www.material-ui.com/#/components/dialog) are used with.
 

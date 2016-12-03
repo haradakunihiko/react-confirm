@@ -1,8 +1,10 @@
 import React from 'react';
-import Dialog from 'material-ui/lib/dialog';
-import FlatButton from 'material-ui/lib/flat-button';
-import RaisedButton from 'material-ui/lib/raised-button';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import { confirmable } from 'react-confirm';
+
+import Theme from '../theme'
 
 class Confirmation extends React.Component {
 
@@ -33,7 +35,7 @@ class Confirmation extends React.Component {
     ];
 
     return (
-      <div>
+      <Theme>
         <Dialog
           title={title}
           actions={actions}
@@ -43,7 +45,7 @@ class Confirmation extends React.Component {
         >
           {confirmation}
         </Dialog>
-      </div>
+      </Theme>
     );
   }
 }

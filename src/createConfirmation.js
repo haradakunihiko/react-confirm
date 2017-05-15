@@ -1,6 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+// add IE support
+if (!window.Promise) {
+  var Promise = require("bluebird");
+  window.Promise = Promise;
+}
+
 const createConfirmation = (Component) => {
   return (props) => {
     const wrapper = document.body.appendChild(document.createElement('div'));

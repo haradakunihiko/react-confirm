@@ -28,6 +28,7 @@
   "author": "",
   "license": "MIT",
   "peerDependencies": {
+    "bluebird": "^3.5.0",
     "react-dom": "^0.14.7"
   },
   "devDependencies": {

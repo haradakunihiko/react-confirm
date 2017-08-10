@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const createConfirmation = (Component) => {
+const createConfirmation = (Component, unmountDelay) => {
   return (props) => {
     const wrapper = document.body.appendChild(document.createElement('div'));
 
@@ -22,11 +22,13 @@ const createConfirmation = (Component) => {
       }
     })
 
+    const unmountDelay = (typeof unmountDelay === 'undefined') ? 0 : unmountDelay;
+
     function dispose() {
       setTimeout(() => {
         ReactDOM.unmountComponentAtNode(wrapper);
         setTimeout(() => wrapper.remove());
-      }, 1000);
+      }, unmountDelay);
     }
 
     return promise.then((result) => {

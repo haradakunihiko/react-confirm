@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const createConfirmation = (Component) => {
+const createConfirmation = (Component, unmountDelay = 1000) => {
   return (props) => {
     const wrapper = document.body.appendChild(document.createElement('div'));
 
@@ -26,7 +26,7 @@ const createConfirmation = (Component) => {
       setTimeout(() => {
         ReactDOM.unmountComponentAtNode(wrapper);
         setTimeout(() => wrapper.remove());
-      }, 1000);
+      }, unmountDelay);
     }
 
     return promise.then((result) => {

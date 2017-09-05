@@ -26,7 +26,8 @@ In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/exa
 ### create confirmable component
 
 ```js
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { confirmable } from 'react-confirm';
 import Dialog from 'any-dialog-library'; // your choice.
 

@@ -19,9 +19,10 @@
     "webpack": "^1.12.12"
   },
   "dependencies": {
-    "react": "^0.14.7",
-    "react-bootstrap": "^0.28.2",
+    "prop-types": "^15.5.10",
+    "react": "^15.0.0",
+    "react-bootstrap": "^0.31.3",
     "react-confirm": "^0.1.0",
-    "react-dom": "^0.14.7"
+    "react-dom": "^15.0.0"
   }
 }

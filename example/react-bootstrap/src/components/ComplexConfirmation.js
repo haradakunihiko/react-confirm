@@ -1,5 +1,6 @@
-import React, { PropTypes } from 'react';
-import { Modal, Button, Input } from 'react-bootstrap'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Modal, Button, FormControl } from 'react-bootstrap'
 import { confirmable } from 'react-confirm';
 
 class ComplexConfirmation extends React.Component {
@@ -13,7 +14,7 @@ class ComplexConfirmation extends React.Component {
     return () => {
       proceed({
         button: index,
-        input: this.inputRef.getValue(),
+        input: this.inputRef.value,
       });
     }
   }
@@ -37,7 +38,7 @@ class ComplexConfirmation extends React.Component {
             {message}
           </Modal.Body>
           <Modal.Footer>
-            <Input ref={::this.refCallback} type='text' />
+            <FormControl type="text" inputRef={::this.refCallback} type='text' />
             <Button onClick={cancel}>Cancel</Button>
             <Button className='button-l' bsStyle="default" onClick={this.handleOnClick(1)}>1st</Button>
             <Button className='button-l' bsStyle="default" onClick={this.handleOnClick(2)}>2nd</Button>

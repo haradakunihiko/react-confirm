@@ -25,7 +25,7 @@ const createConfirmation = (Component, unmountDelay = 1000, mountingNode = docum
     function dispose() {
       setTimeout(() => {
         ReactDOM.unmountComponentAtNode(wrapper);
-        setTimeout(() => wrapper.remove());
+        setTimeout(() => document.body.removeChild(wrapper));
       }, unmountDelay);
     }
 

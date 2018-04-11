@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const createConfirmation = (Component, unmountDelay = 1000) => {
+const createConfirmation = (Component, unmountDelay = 1000, mountingNode = document.body) => {
   return (props) => {
-    const wrapper = document.body.appendChild(document.createElement('div'));
+    const wrapper = mountingNode.appendChild(document.createElement('div'));
 
     const promise = new Promise((resolve, reject) => {
       try {

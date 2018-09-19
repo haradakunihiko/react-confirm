@@ -24,7 +24,7 @@
     "clean": "rimraf lib",
     "build": "babel src --out-dir lib",
     "prepublish": "npm run clean && npm run build",
-    "test": ""
+    "test": "echo succeeded"
   },
   "author": "",
   "license": "MIT",

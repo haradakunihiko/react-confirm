@@ -17,6 +17,10 @@ In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/exa
  - You can get values from the component in the promise.
  - There is no limitation in the dialog. You can use input forms, multiple buttons, whatever you want (see [complex example](https://github.com/haradakunihiko/react-confirm/tree/master/example/react-bootstrap)).
 
+
+## Demo
+https://codesandbox.io/s/0m86xp5pzl
+
 ## Usage
 1. create your dialog component.
 2. apply `confirmable` to your component (optional, but usually recommended).

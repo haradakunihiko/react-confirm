@@ -1,6 +1,6 @@
 {
   "name": "react-confirm",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "description": "Small library which makes your Dialog component callable",
   "main": "lib/index.js",
   "repository": {

@@ -15,11 +15,10 @@ In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/exa
  - You can open a dialog component by calling function and it will be rendered outside your application. The function returns promise so that you can define callbacks to handle the confirmation result.
  - You can pass arguments to the function and use them inside the dialog component.
  - You can get values from the component in the promise.
- - There is no limitation in the dialog. You can use input forms, multiple buttons, whatever you want (see [complex example](https://github.com/haradakunihiko/react-confirm/tree/master/example/react-bootstrap)).
-
+ - There is no limitation in the dialog. You can use input forms, multiple buttons, whatever you want (see demo site).
 
 ## Demo
-https://codesandbox.io/s/0m86xp5pzl
+https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1
 
 ## Usage
 1. create your dialog component.
@@ -35,19 +34,17 @@ import PropTypes from 'prop-types';
 import { confirmable } from 'react-confirm';
 import Dialog from 'any-dialog-library'; // your choice.
 
-const YourDialog = ({show, proceed, dismiss, cancel, confirmation, options}) => {
-  <Dialog onHide={dismiss} show={show}>
+const YourDialog = ({show, proceed, confirmation, options}) => {
+  <Dialog onHide={() => proceed(false)} show={show}>
     {confirmation}
-    <button onClick={() => cancel('arguments will be passed to the callback')}>CANCEL</button>
-    <button onClick={() => proceed('same as cancel')}>OK</button>
+    <button onClick={() => proceed(false)}>CANCEL</button>
+    <button onClick={() => proceed(true)}>OK</button>
   </Dialog>
 }
 
 YourDialog.propTypes = {
   show: PropTypes.bool,            // from confirmable. indicates if the dialog is shown or not.
   proceed: PropTypes.func,         // from confirmable. call to close the dialog with promise resolved.
-  cancel: PropTypes.func,          // from confirmable. call to close the dialog with promise rejected.
-  dismiss: PropTypes.func,         // from confirmable. call to only close the dialog.
   confirmation: PropTypes.string,  // arguments of your confirm function
   options: PropTypes.object        // arguments of your confirm function
 }
@@ -69,39 +66,40 @@ import { createConfirmation } from 'react-confirm';
 import YourDialog from './YourDialog';
 
 // create confirm function
-const confirm = createConfirmation(YourDialog);
+export const confirm = createConfirmation(YourDialog);
 
-// This is optional. But I recommend to define your confirm function easy to call.
-export default function(confirmation, options = {}) {
-  // You can pass whatever you want to the component. These arguments will be your Component's props
+// This is optional. But wrapping function makes it easy to use.
+export function confirmWrapper(confirmation, options = {}) {
   return confirm({ confirmation, options });
 }
 
 ```
 
-### call it!
+### use it!
+Now, you can show dialog just like window.confirm with async-await. The most common example is onclick handler for submit buttons.
+ 
 ```js
-import confirm from './confirm'
-confirm('Are you sure').then(
-  (result) => {
-    // `proceed` callback
-    console.log('proceed called');
-    console.log(result);
-  },
-  (result) => {
-    // `cancel` callback
-    console.log('cancel called');
-    console.log(result)
+import { confirmWrapper, confirm } from './confirm'
+
+const handleOnClick = async () => {
+  if (await confirm({
+    confirmation: 'Are you sure?'
+  })) {
+    console.log('yes');
+  } else {
+    console.log('no');
   }
-)
-// nothing will be called when `dismiss` is triggered.
+}
+
+const handleOnClick2 = async () => {
+  if (await confirmWrapper('Are your sure?')) {
+    console.log('yes');
+  } else {
+    console.log('no');
+  }
+}
+
 ```
 
-## Try example
+You can check more complex example in [codesandbox](https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1)
 
-```
-cd example/react-bootstrap # or cd example/material-ui
-npm install
-npm run build
-npm start
-```

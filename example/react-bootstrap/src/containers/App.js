@@ -1,12 +1,12 @@
 import React from 'react';
 import { confirm, confirmComplex } from '../util/confirm';
 
-const handleOnClick = () => {
-  confirm('Are you sure?').then(() => {
-    console.log('proceed!') ;
-  }, () => {
-    console.log('cancel!');
-  });
+const handleOnClick = async () => {
+  if (await confirm('Are your sure?')) {
+    console.log('yes');
+  } else {
+    console.log('no');
+  }
 }
 
 const handleOnClickComplex = () => {

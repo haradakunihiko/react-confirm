@@ -34,13 +34,13 @@ import PropTypes from 'prop-types';
 import { confirmable } from 'react-confirm';
 import Dialog from 'any-dialog-library'; // your choice.
 
-const YourDialog = ({show, proceed, confirmation, options}) => {
+const YourDialog = ({show, proceed, confirmation, options}) => (
   <Dialog onHide={() => proceed(false)} show={show}>
     {confirmation}
     <button onClick={() => proceed(false)}>CANCEL</button>
     <button onClick={() => proceed(true)}>OK</button>
   </Dialog>
-}
+)
 
 YourDialog.propTypes = {
   show: PropTypes.bool,            // from confirmable. indicates if the dialog is shown or not.

@@ -1,53 +1,47 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button, FormControl } from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import FormControl from 'react-bootstrap/FormControl'
+import Modal from 'react-bootstrap/Modal'
 import { confirmable } from 'react-confirm';
 
-class ComplexConfirmation extends React.Component {
+const ComplexConfirmation = ({
+  show,
+  proceed,
+  dismiss,
+  cancel,
+  message
+}) => {
+  const inputRef = useRef();
 
-  refCallback(ref) {
-    this.inputRef = ref;
-  }
-
-  handleOnClick(index) {
-    const { proceed } = this.props;
+  const handleOnClick = (index) => {
     return () => {
       proceed({
         button: index,
-        input: this.inputRef.value,
+        input: inputRef.current.value,
       });
     }
   }
 
-  render() {
-    const {
-      show,
-      proceed,
-      dismiss,
-      cancel,
-      message
-    } = this.props;
-
-    return (
-      <div className="static-modal">
-        <Modal show={show} onHide={dismiss} >
-          <Modal.Header>
-            <Modal.Title></Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {message}
-          </Modal.Body>
-          <Modal.Footer>
-            <FormControl type="text" inputRef={::this.refCallback} type='text' />
-            <Button onClick={cancel}>Cancel</Button>
-            <Button className='button-l' bsStyle="default" onClick={this.handleOnClick(1)}>1st</Button>
-            <Button className='button-l' bsStyle="default" onClick={this.handleOnClick(2)}>2nd</Button>
-            <Button className='button-l' bsStyle="default" onClick={this.handleOnClick(3)}>3rd</Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
-    )
-  }
+  return (
+    <div className="static-modal">
+      <Modal animation={false} show={show} onHide={dismiss}>
+        <Modal.Header>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {message}
+        </Modal.Body>
+        <Modal.Footer>
+          <FormControl type="text" ref={inputRef} type='text' />
+          <Button onClick={cancel}>Cancel</Button>
+          <Button className='button-l' bsStyle="default" onClick={handleOnClick(1)}>1st</Button>
+          <Button className='button-l' bsStyle="default" onClick={handleOnClick(2)}>2nd</Button>
+          <Button className='button-l' bsStyle="default" onClick={handleOnClick(3)}>3rd</Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  )
 }
 
 

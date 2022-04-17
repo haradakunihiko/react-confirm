@@ -5,22 +5,31 @@ module.exports = {
   entry: [
     './src/index'
   ],
+  mode: 'production',
   output: {
-    path: './static/',
+    path: __dirname + '/static',
     filename: 'bundle.js'
   },
   resolve: {
-    extensions: ['', '.js'],
-    root: [
-      path.join(__dirname, 'src'),
-    ]
+    alias: {
+      'react-confirm': path.resolve(__dirname, '../../src'),
+
+      // Ensure only the local copy of React is used
+      'react': path.resolve(__dirname, 'node_modules', 'react'),
+      'react-dom': path.resolve(__dirname, 'node_modules', 'react-dom'),
+    }
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loaders: ['babel-loader'],
+        use: {
+           loader: 'babel-loader',
+           options: {
+             presets: ['@babel/preset-env', '@babel/preset-react']
+           }
+        },
       }
     ]
   }

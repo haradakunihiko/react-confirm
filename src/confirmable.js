@@ -1,38 +1,31 @@
-import React from 'react'
+import React, {useState} from 'react';
 
-const confirmable = (Component) => class extends React.Component {
+const confirmable = (Component) => ({dispose, reject, resolve, ...other}) => {
+  const [show, setShow] = useState(true);
 
-  constructor(props) {
-    super(props);
+  const dismiss = () => {
+    setShow(false);
+    dispose()
+  }
 
-    this.state = {
-      show: true,
-    }
+  const cancel = (value) => {
+    setShow(false)
+    reject(value);
   }
-  dismiss() {
-    this.setState({
-      show: false,
-    }, () => {
-      this.props.dispose();
-    });
+
+  const proceed = (value) => {
+    setShow(false)
+    resolve(value)
   }
-  cancel(value) {
-    this.setState({
-      show: false,
-    }, () => {
-      this.props.reject(value);
-    });
-  }
-  proceed(value) {
-    this.setState({
-      show: false,
-    }, () => {
-      this.props.resolve(value);
-    });
-  }
-  render() {
-    return <Component proceed={::this.proceed} cancel={::this.cancel} dismiss={::this.dismiss} show={this.state.show} {...this.props}/>
-  }
+
+  return (
+    <Component
+      cancel={cancel}
+      dismiss={dismiss}
+      proceed={proceed}
+      show={show}
+      {...other} />
+  );
 }
 
 export default confirmable;

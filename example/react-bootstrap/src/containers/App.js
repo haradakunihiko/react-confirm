@@ -25,7 +25,7 @@ const App = () => {
     </div>
   );
 
-  return 
+  return
 }
 
 export default App;

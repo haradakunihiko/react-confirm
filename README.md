@@ -20,6 +20,11 @@ In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/exa
 ## Demo
 https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1
 
+## Versions
+
+- React 18+ users should use `react-confirm` version 0.2.x
+- React <=17 users should stick to `react-confirm` version 0.1.
+
 ## Usage
 1. create your dialog component.
 2. apply `confirmable` to your component (optional, but usually recommended).

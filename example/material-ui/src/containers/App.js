@@ -1,5 +1,6 @@
 import React from 'react';
-import confirm from 'util/confirm';
+import confirm from '../util/confirm';
+import Theme from '../theme'
 
 const handleOnClick = () => {
   confirm('Are you sure?').then(() => {

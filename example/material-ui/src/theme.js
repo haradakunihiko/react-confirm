@@ -1,16 +1,36 @@
 import React from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
+import { CacheProvider } from '@emotion/react';
+import { red } from '@mui/material/colors';
+import createCache from '@emotion/cache';
 
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+const createEmotionCache = () => {
+  return createCache({ key: 'css', prepend: true });
+}
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
+const cache = createEmotionCache();
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#556cd6',
+    },
+    secondary: {
+      main: '#19857b',
+    },
+    error: {
+      main: red.A400,
+    },
+  },
+});
 
 const Theme = (props) => (
-  <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-    { props.children }
-  </MuiThemeProvider>
+  <CacheProvider value={cache}>
+    <ThemeProvider theme={theme}>
+      { props.children }
+    </ThemeProvider>
+  </CacheProvider>
 );
 
 export default Theme;

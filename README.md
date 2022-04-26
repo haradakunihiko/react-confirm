@@ -23,7 +23,7 @@ https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1
 ## Versions
 
 - React 18+ users should use `react-confirm` version 0.2.x
-- React <=17 users should stick to `react-confirm` version 0.1.
+- React <=17 users should stick to `react-confirm` version 0.1.x
 
 ## Usage
 1. create your dialog component.

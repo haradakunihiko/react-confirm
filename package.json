@@ -29,8 +29,8 @@
   "author": "",
   "license": "MIT",
   "peerDependencies": {
-    "react-dom": "^0.14.7 || 15.x || 16.x || 17.x",
-    "react": "^0.14.7 || 15.x || 16.x || 17.x"
+    "react": "^0.14.7 || 15.x || 16.x || 17.x",
+    "react-dom": "^0.14.7 || 15.x || 16.x || 17.x"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
@@ -42,6 +42,5 @@
     "dependency-check": "^3.2.1",
     "rimraf": "^2.5.1",
     "webpack": "^1.15.0"
-  },
-  "dependencies": {}
+  }
 }

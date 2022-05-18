@@ -108,3 +108,4 @@ const handleOnClick2 = async () => {
 
 You can check more complex example in [codesandbox](https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1)
 
+

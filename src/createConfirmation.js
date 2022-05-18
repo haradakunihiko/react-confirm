@@ -26,8 +26,8 @@ const createConfirmation = (Component, unmountDelay = 1000, mountingNode) => {
       setTimeout(() => {
         ReactDOM.unmountComponentAtNode(wrapper);
         setTimeout(() => {
-            if (wrapper && wrapper.parent) {
-              wrapper.parent.removeChild(wrapper);
+            if (wrapper && wrapper.parentNode) {
+              wrapper.parentNode.removeChild(wrapper);
             }
         });
       }, unmountDelay);

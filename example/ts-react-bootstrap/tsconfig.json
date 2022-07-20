@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "strict": true,
+      "sourceMap": true,
+      "target": "ES5",
+      "module": "ES2015",
+      "jsx": "react",
+      "moduleResolution": "node",
+      "lib": [
+        "ES2021",
+        "DOM"
+      ],
+      "paths": {
+        "react-confirm": ["../../typescript"]
+      }
+    }
+  }

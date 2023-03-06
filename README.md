@@ -109,3 +109,10 @@ const handleOnClick2 = async () => {
 You can check more complex example in [codesandbox](https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1)
 
 
+## typescript
+
+Experimentally added full typescript declaration files at `typescript` branch.
+
+see [typescript example](https://github.com/haradakunihiko/react-confirm/tree/typescript/example/ts-react-bootstrap).
+
+and try `npm install git@github.com:haradakunihiko/react-confirm.git#typescript` to use in your project.

@@ -1,14 +1,14 @@
 # react-confirm
 Small library which makes your Dialog component callable.
 
-This library does not provide any view component. Just adds a functionality to be callable like `window.confirm`.
+This library does not provide any view component. Just adds a callable functionality to your Dialog component like `window.confirm`.
 
 In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/example), [react-bootstrap](https://react-bootstrap.github.io/components.html#modals) and [material-ui](http://www.material-ui.com/#/components/dialog) are used with.
 
 [![npm version](https://badge.fury.io/js/react-confirm.svg)](https://badge.fury.io/js/react-confirm)
 
 ## Motivation
- React is great. And I respect the concept to render the view reactively only by it's state. However, it easily becomes really complex to manage all states which are only needed just temporarily like confirmation dialog. The question is... Is it worth to manage them inside your app? I guess the answer is not always yes.
+ React is great. And I respect the concept to render the view reactively only by it's state. However, it easily becomes too complex to manage all temporary states like confirmation dialog. The question is... Is it worth to manage them inside your app? I guess the answer is not always yes.
 
 ## What you can do
  With this library,
@@ -108,6 +108,34 @@ const handleOnClick2 = async () => {
 
 You can check more complex example in [codesandbox](https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1)
 
+## Using with Context
+By default, this library appends your component to outside of your app's React component tree. To consume context in your component, you need to put `MountComponent` to your app's tree.
+
+```js
+import { createConfirmationCreater, createReactTreeMounter, createMountComponent } from 'react-confirm';
+
+const mounter = createReactTreeMounter(); 
+
+export const createConfirmation = createConfirmationCreater(mounter);
+export const MountComponent = createMountComponent(mounter);
+```
+
+```js
+const YourRootComponent = () => {
+  return (
+    <YourContext.Provider>
+      <MountComponent />
+      <Toolbar />
+    </YourContext.Provider>
+  )
+}
+```
+
+To render into a different part of the DOM, pass dom element to `createReactTreeMounter`. This will changes the physical placement of the DOM node using `createPortal`.
+
+```js
+const mounter = createReactTreeMounter(document.body); 
+```
 
 ## typescript
 

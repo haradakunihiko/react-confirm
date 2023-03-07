@@ -1,21 +1,11 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { createDomTreeMounter } from './mounter/domTree';
 
-const createConfirmation = (Component, unmountDelay = 1000, mountingNode) => {
+export const createConfirmationCreater = (mounter) =>  (Component, unmountDelay = 1000, mountingNode) => {
   return (props) => {
-    const wrapper = (mountingNode || document.body).appendChild(document.createElement('div'));
-    const root = createRoot(wrapper);
-
+    let mountId;
     const promise = new Promise((resolve, reject) => {
       try {
-        root.render(
-          <Component
-            reject={reject}
-            resolve={resolve}
-            dispose={dispose}
-            {...props}
-          />
-        );
+        mountId = mounter.mount(Component, { reject, resolve, dispose, ...props}, mountingNode)
       } catch (e) {
         console.error(e);
         throw e;
@@ -24,12 +14,7 @@ const createConfirmation = (Component, unmountDelay = 1000, mountingNode) => {
 
     function dispose() {
       setTimeout(() => {
-        root.unmount();
-        setTimeout(() => {
-          if (wrapper && wrapper.parentNode) {
-            wrapper.parentNode.removeChild(wrapper);
-          }
-        });
+        mounter.unmount(mountId);
       }, unmountDelay);
     }
 
@@ -43,4 +28,4 @@ const createConfirmation = (Component, unmountDelay = 1000, mountingNode) => {
   }
 }
 
-export default createConfirmation;
+export default createConfirmationCreater(createDomTreeMounter());

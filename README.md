@@ -1,28 +1,29 @@
 # react-confirm
-Small library which makes your Dialog component callable.
+react-confirm is a lightweight library that simplifies the implementation of confirmation dialogs in React applications by offering a Promise-based API that works seamlessly with async/await syntax, similar to `window.confirm`.
 
-This library does not provide any view component. Just adds a callable functionality to your Dialog component like `window.confirm`.
+Another key feature of react-confirm is that it doesn't provide a specific view or component for the confirmation dialog, which allows you to easily customize the appearance of the dialog to match your application's design. 
 
-In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/example), [react-bootstrap](https://react-bootstrap.github.io/components.html#modals) and [material-ui](http://www.material-ui.com/#/components/dialog) are used with.
+In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/example), [react-bootstrap](https://react-bootstrap-v3.netlify.app/components/modal/) and [material-ui](http://www.material-ui.com/#/components/dialog) are used with.
 
 [![npm version](https://badge.fury.io/js/react-confirm.svg)](https://badge.fury.io/js/react-confirm)
 
 ## Motivation
- React is great. And I respect the concept to render the view reactively only by it's state. However, it easily becomes too complex to manage all temporary states like confirmation dialog. The question is... Is it worth to manage them inside your app? I guess the answer is not always yes.
+React is a powerful library that allows for reactive rendering based on component state. However, managing temporary states like confirmation dialogs can quickly become complex. The question is: is it worth implementing these states within your app? The answer is not always a clear yes.
 
 ## What you can do
- With this library,
- - You can open a dialog component by calling function and it will be rendered outside your application. The function returns promise so that you can define callbacks to handle the confirmation result.
- - You can pass arguments to the function and use them inside the dialog component.
- - You can get values from the component in the promise.
- - There is no limitation in the dialog. You can use input forms, multiple buttons, whatever you want (see demo site).
+react-confirm library offers several benefits:
+
+- You can open a dialog component by calling a function without appending it into your React tree. The function returns a promise, allowing you to handle confirmation results with callbacks.
+- You can pass arguments to the function and use them inside the dialog component.
+- You can retrieve values from the component in the promise.
+- The library provides flexibility in designing the dialog. There is no limitation in the type of components you can use, whether it be input forms or multiple buttons. You can even check out the demo site to see examples of how to customize the dialog.
 
 ## Demo
 https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1
 
 ## Versions
 
-- React 18+ users should use `react-confirm` version 0.2.x
+- React 18+ users should use `react-confirm` version 0.2.x or 0.3.x
 - React <=17 users should stick to `react-confirm` version 0.1.x
 
 ## Usage
@@ -109,29 +110,37 @@ const handleOnClick2 = async () => {
 You can check more complex example in [codesandbox](https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1)
 
 ## Using with Context
-By default, this library appends your component to outside of your app's React component tree. To consume context in your component, you need to put `MountComponent` to your app's tree.
+By default, this library renders the confirmation dialog without appending the component to your app's React component tree. While this can be useful, it may cause issues if you need to consume context in your component. To overcome this problem, you can use the `MountPoint` component to include your confirmation dialog within your app's tree, enabling it to access context and other data from the app.
+
+Create your own `createConfirmation` using `createConfirmationCreater` and `createReactTreeMounter`.
 
 ```js
-import { createConfirmationCreater, createReactTreeMounter, createMountComponent } from 'react-confirm';
+import { createConfirmationCreater, createReactTreeMounter, createMountPoint } from 'react-confirm';
 
 const mounter = createReactTreeMounter(); 
 
 export const createConfirmation = createConfirmationCreater(mounter);
-export const MountComponent = createMountComponent(mounter);
+export const MountPoint = createMountPoint(mounter);
 ```
 
+Put `MountPoint` into your React tree.
 ```js
 const YourRootComponent = () => {
   return (
     <YourContext.Provider>
-      <MountComponent />
+      <MountPoint />
       <Toolbar />
     </YourContext.Provider>
   )
 }
 ```
 
-To render into a different part of the DOM, pass dom element to `createReactTreeMounter`. This will changes the physical placement of the DOM node using `createPortal`.
+use your `createConfirmation` as usual.
+```js
+export const confirm = createConfirmation(YourDialog);
+```
+
+To render the confirmation dialog within the React component tree but in a different part of the DOM, you can pass a DOM element to the `createReactTreeMounter` function. This will use the `createPortal` method to render the confirmation dialog in the specified DOM element while keeping it within the React component tree.
 
 ```js
 const mounter = createReactTreeMounter(document.body); 

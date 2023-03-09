@@ -28,7 +28,7 @@ export function createReactTreeMounter(mountNode) {
     }
 }
 
-export function createMountComponent(reactTreeMounter) {
+export function createMountPoint(reactTreeMounter) {
     return () => {
         const [confirmComponents, setConfirmComponents] = useState({});
 

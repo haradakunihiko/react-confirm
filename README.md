@@ -27,7 +27,7 @@ https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1
 
 ## Usage
 1. create your dialog component.
-2. apply `confirmable` to your component (optional, but usually recommended).
+2. apply `confirmable` to your component (Optional. See `confirmable` implementation).
 3. create function with `createConfirmation` by passing your confirmable component.
 4. call it!
 

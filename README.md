@@ -1,7 +1,7 @@
 # react-confirm
 react-confirm is a lightweight library that simplifies the implementation of confirmation dialogs in React applications by offering a Promise-based API that works seamlessly with async/await syntax, similar to `window.confirm`.
 
-Another key feature of react-confirm is that it doesn't provide a specific view or component for the confirmation dialog, which allows you to easily customize the appearance of the dialog to match your application's design. 
+One key feature of react-confirm is that it doesn't provide a specific view or component for the confirmation dialog, allowing you to easily customize the appearance of the dialog to match your application's design.
 
 In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/example), [react-bootstrap](https://react-bootstrap-v3.netlify.app/components/modal/) and [material-ui](http://www.material-ui.com/#/components/dialog) are used with.
 
@@ -27,9 +27,9 @@ https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1
 - React <=17 users should stick to `react-confirm` version 0.1.x
 
 ## Usage
-1. create your dialog component.
-2. apply `confirmable` to your component (Optional. See `confirmable` implementation).
-3. create function with `createConfirmation` by passing your confirmable component.
+1. Create your dialog component.
+2. Apply `confirmable` HOC to your component (Optional. See `confirmable` implementation).
+3. Create a function using `createConfirmation` by passing your `confirmable` component.
 4. call it!
 
 ### create confirmable component
@@ -57,13 +57,6 @@ YourDialog.propTypes = {
 
 // confirmable HOC pass props `show`, `dismiss`, `cancel` and `proceed` to your component.
 export default confirmable(YourDialog);
-
-// or, use `confirmable` as decorator
-@confirmable
-class YourDialog extends React.Component {
-}
-
-
 ```
 
 ### create confirm function
@@ -78,7 +71,6 @@ export const confirm = createConfirmation(YourDialog);
 export function confirmWrapper(confirmation, options = {}) {
   return confirm({ confirmation, options });
 }
-
 ```
 
 ### use it!

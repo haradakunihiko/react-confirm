@@ -30,9 +30,9 @@ https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1
 1. Create your dialog component.
 2. Apply `confirmable` HOC to your component (Optional. See `confirmable` implementation).
 3. Create a function using `createConfirmation` by passing your `confirmable` component.
-4. call it!
+4. Call it!
 
-### create confirmable component
+### Create your dialog component and Apply `confirmable` HOC to your component.
 
 ```js
 import React from 'react';
@@ -59,7 +59,7 @@ YourDialog.propTypes = {
 export default confirmable(YourDialog);
 ```
 
-### create confirm function
+### Create a function using `createConfirmation`
 ```js
 import { createConfirmation } from 'react-confirm';
 import YourDialog from './YourDialog';
@@ -73,7 +73,7 @@ export function confirmWrapper(confirmation, options = {}) {
 }
 ```
 
-### use it!
+### Call it!
 Now, you can show dialog just like window.confirm with async-await. The most common example is onclick handler for submit buttons.
  
 ```js
@@ -121,7 +121,7 @@ const YourRootComponent = () => {
   return (
     <YourContext.Provider>
       <MountPoint />
-      <Toolbar />
+      <YourApp />
     </YourContext.Provider>
   )
 }

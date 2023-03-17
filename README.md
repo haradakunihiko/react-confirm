@@ -138,6 +138,9 @@ To render the confirmation dialog within the React component tree but in a diffe
 const mounter = createReactTreeMounter(document.body); 
 ```
 
+### example
+Context example with Chakra-ui in [codesandbox](https://codesandbox.io/s/react-confirm-with-chakra-ui-oidpf1)
+
 ## typescript
 
 Experimentally added full typescript declaration files at `typescript` branch.

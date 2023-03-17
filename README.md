@@ -3,9 +3,13 @@ react-confirm is a lightweight library that simplifies the implementation of con
 
 One key feature of react-confirm is that it doesn't provide a specific view or component for the confirmation dialog, allowing you to easily customize the appearance of the dialog to match your application's design.
 
-In the [example](https://github.com/haradakunihiko/react-confirm/tree/master/example), [react-bootstrap](https://react-bootstrap-v3.netlify.app/components/modal/) and [material-ui](http://www.material-ui.com/#/components/dialog) are used with.
-
 [![npm version](https://badge.fury.io/js/react-confirm.svg)](https://badge.fury.io/js/react-confirm)
+
+## Examples
+- [react-bootstrap demo in codesandbox](https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1)
+- [chakra-ui(using context) demo in codesandbox](https://codesandbox.io/s/react-confirm-with-chakra-ui-oidpf1)
+- [react-bootstrap example](https://github.com/haradakunihiko/react-confirm/tree/master/example/react-bootstrap)
+- [material-ui example](https://github.com/haradakunihiko/react-confirm/tree/master/example/material-ui)
 
 ## Motivation
 React is a powerful library that allows for reactive rendering based on component state. However, managing temporary states like confirmation dialogs can quickly become complex. The question is: is it worth implementing these states within your app? The answer is not always a clear yes.

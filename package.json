@@ -1,6 +1,6 @@
 {
   "name": "react-confirm",
-  "version": "0.3.0-2#typescript",
+  "version": "0.3.0-2-typescript",
   "description": "Small library which makes your Dialog component callable",
   "main": "lib/index.js",
   "repository": {

@@ -79,7 +79,7 @@ export function confirmWrapper(confirmation, options = {}) {
 
 ### Call it!
 Now, you can show dialog just like window.confirm with async-await. The most common example is onclick handler for submit buttons.
- 
+
 ```js
 import { confirmWrapper, confirm } from './confirm'
 
@@ -108,13 +108,12 @@ You can check more complex example in [codesandbox](https://codesandbox.io/s/rea
 ## Using with Context
 By default, this library renders the confirmation dialog without appending the component to your app's React component tree. While this can be useful, it may cause issues if you need to consume context in your component. To overcome this problem, you can use the `MountPoint` component to include your confirmation dialog within your app's tree, enabling it to access context and other data from the app.
 
-<<<<<<< HEAD
-Create your own `createConfirmation` using `createConfirmationCreater` and `createReactTreeMounter`.
+Create your own `createConfirmation` function and `MountPoint` Component using `createConfirmationCreater` and `createReactTreeMounter`.
 
 ```js
 import { createConfirmationCreater, createReactTreeMounter, createMountPoint } from 'react-confirm';
 
-const mounter = createReactTreeMounter(); 
+const mounter = createReactTreeMounter();
 
 export const createConfirmation = createConfirmationCreater(mounter);
 export const MountPoint = createMountPoint(mounter);
@@ -140,20 +139,18 @@ export const confirm = createConfirmation(YourDialog);
 To render the confirmation dialog within the React component tree but in a different part of the DOM, you can pass a DOM element to the `createReactTreeMounter` function. This will use the `createPortal` method to render the confirmation dialog in the specified DOM element while keeping it within the React component tree.
 
 ```js
-const mounter = createReactTreeMounter(document.body); 
+const mounter = createReactTreeMounter(document.body);
 ```
 
 ### example
 Context example with Chakra-ui in [codesandbox](https://codesandbox.io/s/react-confirm-with-chakra-ui-oidpf1)
 
-## typescript
-Experimentally added typescript declaration files at `typescript` branch.
-
-see [typescript example](https://github.com/haradakunihiko/react-confirm/tree/typescript/example/ts-react-bootstrap).
+## typescript usage
+Below, we present two possible ways to define a confirmation dialog component using react-confirm. You can choose either based on your preference.
 
 ```ts
 const Confirmation1: React.FC<ReactConfirmDialogProps<Props, Response>> = (props) => (<Dialog></Dialog>)
 const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog></Dialog>)
 ```
 
-and try `npm install git+ssh://git@github.com:haradakunihiko/react-confirm.git#typescript` to use in your project.
+Ensure to specify both the dialog component's `Props` and the response value `Response` when using these types. These typings will be especially useful when defining functions to display the dialog.

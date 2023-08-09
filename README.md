@@ -146,9 +146,13 @@ const mounter = createReactTreeMounter(document.body);
 Context example with Chakra-ui in [codesandbox](https://codesandbox.io/s/react-confirm-with-chakra-ui-oidpf1)
 
 ## typescript
-
-Experimentally added full typescript declaration files at `typescript` branch.
+Experimentally added typescript declaration files at `typescript` branch.
 
 see [typescript example](https://github.com/haradakunihiko/react-confirm/tree/typescript/example/ts-react-bootstrap).
+
+```ts
+const Confirmation1: React.FC<ReactConfirmDialogProps<Props, Response>> = (props) => (<Dialog></Dialog>)
+const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog></Dialog>)
+```
 
 and try `npm install git@github.com:haradakunihiko/react-confirm.git#typescript` to use in your project.

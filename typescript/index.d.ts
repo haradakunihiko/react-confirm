@@ -1,33 +1,28 @@
-import * as React from "react";
+import * as React from 'react';
 
-export function confirmable<
-    ConfirmationProps = any,
-    ProceedResposne = any
->(
-    component: React.ComponentType<ReactConfirmProps<ConfirmationProps, ProceedResposne>>
-): React.ComponentType<ConfirmableProps & ConfirmationProps>;
+type ConfirmableProps<P, R> = {
+    dispose: () => void;
+    resolve: PromiseLike<R>;
+    reject: (reason?: any) => void;
+} & P;
 
-export function createConfirmation<
-    ConfirmationProps = any,
-    ConfirmResposne = any
->(
-    component: React.ComponentType<ConfirmableProps & ConfirmationProps>,
-    unmountDelay?: number,
-    mountingNode?: any
-): (props: ConfirmationProps) => Promise<ConfirmResposne>;
+type ConfirmableDialog<P, R> = React.ComponentType<ConfirmableProps<P, R>>;
 
-export type ReactConfirmProps<
-    Props = any,
-    ProceedResponse = any,
-> = {
+export type ReactConfirmDialogProps<P, R> = {
     dismiss: () => void;
-    proceed: (value?: ProceedResponse) => void;
+    proceed: (value: R) => void;
     cancel: (value?: any) => void;
     show: boolean;
-} & Props;
+} & P;
 
-export interface ConfirmableProps {
-    dispose: () => void;
-    resolve: PromiseConstructor["resolve"];
-    reject: PromiseConstructor["reject"];
-}
+export type ConfirmDialog<P, R> = React.ComponentType<ReactConfirmDialogProps<P, R>> ;
+
+export function confirmable<P, R>(
+    component: ConfirmDialog<P, R>
+): ConfirmableDialog<P, R>;
+
+export function createConfirmation<P, R>(
+    component: ConfirmableDialog<P, R>,
+    unmountDelay?: number,
+    mountingNode?: HTMLElement,
+): (props: P) => Promise<R>;

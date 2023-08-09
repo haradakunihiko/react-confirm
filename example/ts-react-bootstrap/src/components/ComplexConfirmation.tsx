@@ -3,7 +3,8 @@ import  * as React from 'react';
 import Button from 'react-bootstrap/Button'
 import FormControl from 'react-bootstrap/FormControl'
 import Modal from 'react-bootstrap/Modal'
-import { confirmable, ReactConfirmProps } from 'react-confirm';
+import { confirmable, ConfirmDialog, ReactConfirmDialogProps } from 'react-confirm';
+
 
 export interface Props {
   message: string
@@ -14,7 +15,7 @@ export interface Res {
   input: string,
 }
 
-const ComplexConfirmation: React.FC<ReactConfirmProps<Props, Res>> = ({
+const ComplexConfirmation: React.FC<ReactConfirmDialogProps<Props, Res>> = ({
   show,
   proceed,
   dismiss,

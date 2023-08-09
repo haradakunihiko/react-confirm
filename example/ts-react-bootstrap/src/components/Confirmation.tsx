@@ -3,7 +3,7 @@ import * as React from 'react';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 
-import { confirmable, ReactConfirmProps } from 'react-confirm';
+import { confirmable, ConfirmDialog, ReactConfirmDialogProps } from 'react-confirm';
 
 export interface Props {
   okLabel?: string;
@@ -12,7 +12,7 @@ export interface Props {
   confirmation?: string;
 };
 
-const Confirmation: React.FC<ReactConfirmProps<Props, boolean>> = (props) => (
+const Confirmation: React.FC<ReactConfirmDialogProps<Props, boolean>> = (props) => (
   <div className="static-modal">
     <Modal animation={false} show={props.show} onHide={() => props.proceed(false)} backdrop={true}>
       <Modal.Header>

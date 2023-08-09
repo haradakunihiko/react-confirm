@@ -156,4 +156,4 @@ const Confirmation1: React.FC<ReactConfirmDialogProps<Props, Response>> = (props
 const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog></Dialog>)
 ```
 
-and try `npm install git@github.com:haradakunihiko/react-confirm.git#typescript` to use in your project.
+and try `npm install git+ssh://git@github.com:haradakunihiko/react-confirm.git#typescript` to use in your project.

@@ -149,7 +149,7 @@ Context example with Chakra-ui in [codesandbox](https://codesandbox.io/s/react-c
 Below, we present two possible ways to define a confirmation dialog component using react-confirm. You can choose either based on your preference.
 
 ```ts
-const Confirmation1: React.FC<ReactConfirmDialogProps<Props, Response>> = (props) => (<Dialog></Dialog>)
+const Confirmation1: React.FC<ConfirmDialogProps<Props, Response>> = (props) => (<Dialog></Dialog>)
 const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog></Dialog>)
 ```
 

@@ -79,7 +79,7 @@ export function confirmWrapper(confirmation, options = {}) {
 
 ### Call it!
 Now, you can show dialog just like window.confirm with async-await. The most common example is onclick handler for submit buttons.
- 
+
 ```js
 import { confirmWrapper, confirm } from './confirm'
 
@@ -114,7 +114,7 @@ Create your own `createConfirmation` using `createConfirmationCreater` and `crea
 ```js
 import { createConfirmationCreater, createReactTreeMounter, createMountPoint } from 'react-confirm';
 
-const mounter = createReactTreeMounter(); 
+const mounter = createReactTreeMounter();
 
 export const createConfirmation = createConfirmationCreater(mounter);
 export const MountPoint = createMountPoint(mounter);
@@ -140,7 +140,7 @@ export const confirm = createConfirmation(YourDialog);
 To render the confirmation dialog within the React component tree but in a different part of the DOM, you can pass a DOM element to the `createReactTreeMounter` function. This will use the `createPortal` method to render the confirmation dialog in the specified DOM element while keeping it within the React component tree.
 
 ```js
-const mounter = createReactTreeMounter(document.body); 
+const mounter = createReactTreeMounter(document.body);
 ```
 
 ### example
@@ -152,7 +152,7 @@ Experimentally added typescript declaration files at `typescript` branch.
 see [typescript example](https://github.com/haradakunihiko/react-confirm/tree/typescript/example/ts-react-bootstrap).
 
 ```ts
-const Confirmation1: React.FC<ReactConfirmDialogProps<Props, Response>> = (props) => (<Dialog></Dialog>)
+const Confirmation1: React.FC<ConfirmDialogProps<Props, Response>> = (props) => (<Dialog></Dialog>)
 const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog></Dialog>)
 ```
 

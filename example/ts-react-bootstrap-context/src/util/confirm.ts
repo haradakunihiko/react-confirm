@@ -1,6 +1,11 @@
+import { createConfirmationCreater, createReactTreeMounter, createMountPoint } from 'react-confirm';
 import Confirmation, { Props as ConfimationProps } from '../components/Confirmation';
 import ComplexConfirmation from '../components/ComplexConfirmation';
-import { createConfirmation } from 'react-confirm';
+
+const mounter = createReactTreeMounter();
+
+export const createConfirmation = createConfirmationCreater(mounter);
+export const MountPoint = createMountPoint(mounter);
 
 const defaultConfirmation = createConfirmation(Confirmation);
 

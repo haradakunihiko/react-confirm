@@ -108,7 +108,7 @@ You can check more complex example in [codesandbox](https://codesandbox.io/s/rea
 ## Using with Context
 By default, this library renders the confirmation dialog without appending the component to your app's React component tree. While this can be useful, it may cause issues if you need to consume context in your component. To overcome this problem, you can use the `MountPoint` component to include your confirmation dialog within your app's tree, enabling it to access context and other data from the app.
 
-<<<<<<< HEAD
+
 Create your own `createConfirmation` using `createConfirmationCreater` and `createReactTreeMounter`.
 
 ```js

@@ -18,7 +18,8 @@
   "homepage": "https://github.com/haradakunihiko/react-confirm",
   "files": [
     "lib",
-    "src"
+    "src",
+    "typescript"
   ],
   "scripts": {
     "clean": "rimraf lib",
@@ -47,5 +48,7 @@
     "react-dom": "^18.2.0",
     "regenerator-runtime": "^0.13.11",
     "rimraf": "^3.0.2"
-  }
+  },
+  "dependencies": {},
+  "typings": "typescript/index.d.ts"
 }

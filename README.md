@@ -5,11 +5,10 @@ One key feature of react-confirm is that it doesn't provide a specific view or c
 
 [![npm version](https://badge.fury.io/js/react-confirm.svg)](https://badge.fury.io/js/react-confirm)
 
-## Examples
-- [react-bootstrap demo in codesandbox](https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1)
-- [chakra-ui(using context) demo in codesandbox](https://codesandbox.io/s/react-confirm-with-chakra-ui-oidpf1)
-- [react-bootstrap example](https://github.com/haradakunihiko/react-confirm/tree/master/example/react-bootstrap)
-- [material-ui example](https://github.com/haradakunihiko/react-confirm/tree/master/example/material-ui)
+## Demo
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/1_typescript)
+
+Please note that interactions with the sample dialogs output details to the console. Review the console output while interacting with the dialogs to observe the behavior and outcomes.
 
 ## Motivation
 React is a powerful library that allows for reactive rendering based on component state. However, managing temporary states like confirmation dialogs can quickly become complex. The question is: is it worth implementing these states within your app? The answer is not always a clear yes.
@@ -21,12 +20,6 @@ react-confirm library offers several benefits:
 - You can pass arguments to the function and use them inside the dialog component.
 - You can retrieve values from the component in the promise.
 - The library provides flexibility in designing the dialog. There is no limitation in the type of components you can use, whether it be input forms or multiple buttons. You can even check out the demo site to see examples of how to customize the dialog.
-
-## Demo
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/1_typescript)
-
-Please note that interactions with the sample dialogs output details to the console. Review the console output while interacting with the dialogs to observe the behavior and outcomes.
-
 
 ## Versions
 
@@ -159,3 +152,8 @@ const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog></Dial
 ```
 
 When defining your dialog component, set both the `Props` for the dialog and the `Response` value to be passed when the dialog closes. This will be handy when calling the dialog.
+
+
+## Other Examples
+- [chakra-ui(using context) demo in codesandbox](https://codesandbox.io/s/react-confirm-with-chakra-ui-oidpf1)
+- [material-ui example](https://github.com/haradakunihiko/react-confirm/tree/master/example/material-ui)

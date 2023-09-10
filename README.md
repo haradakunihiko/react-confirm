@@ -8,8 +8,6 @@ One key feature of react-confirm is that it doesn't provide a specific view or c
 ## Demo
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/1_typescript)
 
-Please note that interactions with the sample dialogs output details to the console. Review the console output while interacting with the dialogs to observe the behavior and outcomes.
-
 ## Motivation
 React is a powerful library that allows for reactive rendering based on component state. However, managing temporary states like confirmation dialogs can quickly become complex. The question is: is it worth implementing these states within your app? The answer is not always a clear yes.
 

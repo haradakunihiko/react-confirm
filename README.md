@@ -158,4 +158,4 @@ const Confirmation1: React.FC<ConfirmDialogProps<Props, Response>> = (props) => 
 const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog></Dialog>)
 ```
 
-Ensure to specify both the dialog component's `Props` and the response value `Response` when using these types. These typings will be especially useful when defining functions to display the dialog.
+When defining your dialog component, set both the `Props` for the dialog and the `Response` value to be passed when the dialog closes. This will be handy when calling the dialog.

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { render } from 'react-dom';
 
 export function createDomTreeMounter(defaultMountNode) {
     const confirms = {};
@@ -10,13 +10,12 @@ export function createDomTreeMounter(defaultMountNode) {
         const wrapper = (mountNode || defaultMountNode || document.body).appendChild(document.createElement('div'));
         confirms[key] = wrapper;
 
-        const root = createRoot(wrapper);
-        
-        root.render(
+        render(
             <Component
               {...props}
-            />
-          );
+            />,
+            wrapper
+        );
         callbacks.mounted && callbacks.mounted();
         return key;
     }

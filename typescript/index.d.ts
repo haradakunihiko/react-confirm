@@ -9,9 +9,13 @@ type ConfirmableProps<P, R> = {
 type ConfirmableDialog<P, R> = React.ComponentType<ConfirmableProps<P, R>>;
 
 export type ConfirmDialogProps<P, R> = {
+  /** Dismiss dialog without resolving the promise. */
   dismiss: () => void;
+  /** Resolve the promise with the given value. */
   proceed: (value: R) => void;
+  /** Reject the promise with the given value. */
   cancel: (value?: any) => void;
+  /** Indicates if the dialog should be shown aka. someone is waiting for a promise. */
   show: boolean;
 } & P;
 

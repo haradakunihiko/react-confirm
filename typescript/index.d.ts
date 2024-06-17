@@ -18,7 +18,7 @@ export type ConfirmDialogProps<P, R> = {
   /** Indicates if the dialog should be shown aka. someone is waiting for a promise. */
   show: boolean;
   /** Additional options passed to the dialog. */
-  options: Record<string, any>,
+  options: object,
 } & P;
 
 export type ConfirmDialog<P, R> = React.ComponentType<ConfirmDialogProps<P, R>> ;

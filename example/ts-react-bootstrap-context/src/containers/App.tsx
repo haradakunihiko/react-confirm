@@ -2,7 +2,7 @@ import * as React from 'react';
 import { confirm, confirmComplex } from '../util/confirm';
 
 const handleOnClick = async () => {
-  if (await confirm('Are your sure?')) {
+  if (await confirm({title: 'Are your sure?'})) {
     console.log('yes');
   } else {
     console.log('no');

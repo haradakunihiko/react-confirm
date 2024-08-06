@@ -32,29 +32,27 @@ react-confirm library offers several benefits:
 
 ### Create your dialog component and Apply `confirmable` HOC to your component.
 
-```js
-import React from 'react';
-import PropTypes from 'prop-types';
-import { confirmable } from 'react-confirm';
-import Dialog from 'any-dialog-library'; // your choice.
+```ts
+import * as React from 'react';
 
-const YourDialog = ({show, proceed, confirmation, options}) => (
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
+
+import { confirmable, ConfirmDialog } from 'react-confirm';
+
+export interface Props {
+  confirmation?: string;
+};
+
+const Confirmation: ConfirmDialog<Props, boolean> = ({show, proceed, confirmation}) => (
   <Dialog onHide={() => proceed(false)} show={show}>
     {confirmation}
     <button onClick={() => proceed(false)}>CANCEL</button>
     <button onClick={() => proceed(true)}>OK</button>
   </Dialog>
-)
+);
 
-YourDialog.propTypes = {
-  show: PropTypes.bool,            // from confirmable. indicates if the dialog is shown or not.
-  proceed: PropTypes.func,         // from confirmable. call to close the dialog with promise resolved.
-  confirmation: PropTypes.string,  // arguments of your confirm function
-  options: PropTypes.object        // arguments of your confirm function
-}
-
-// confirmable HOC pass props `show`, `dismiss`, `cancel` and `proceed` to your component.
-export default confirmable(YourDialog);
+export default confirmable(Confirmation);
 ```
 
 ### Create a function using `createConfirmation`
@@ -64,11 +62,6 @@ import YourDialog from './YourDialog';
 
 // create confirm function
 export const confirm = createConfirmation(YourDialog);
-
-// This is optional. But wrapping function makes it easy to use.
-export function confirmWrapper(confirmation, options = {}) {
-  return confirm({ confirmation, options });
-}
 ```
 
 ### Call it!
@@ -81,14 +74,6 @@ const handleOnClick = async () => {
   if (await confirm({
     confirmation: 'Are you sure?'
   })) {
-    console.log('yes');
-  } else {
-    console.log('no');
-  }
-}
-
-const handleOnClick2 = async () => {
-  if (await confirmWrapper('Are your sure?')) {
     console.log('yes');
   } else {
     console.log('no');

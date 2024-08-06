@@ -3,7 +3,7 @@ import confirm from '../util/confirm';
 import Theme from '../theme'
 
 const handleOnClick = () => {
-  confirm({title: 'Are you sure?'}).then(() => {
+  confirm({confirmation: 'Are you sure?'}).then(() => {
     console.log('proceed!') ;
   }, () => {
     console.log('cancel!');

@@ -24,7 +24,7 @@
     "@types/react": "^18.0.15",
     "@types/react-bootstrap": "^0.32.30",
     "@types/react-dom": "^18.0.6",
-    "express": "^4.18.1",
+    "express": "^4.21.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.4.0",
     "react-dom": "^18.2.0"

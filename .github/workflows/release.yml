@@ -55,13 +55,6 @@ jobs:
           fi
           echo "✅ Version verified: $ACTUAL_VERSION"
 
-      - name: Check if tag already exists
-        run: |
-          if git rev-parse "${{ steps.package_version.outputs.tag }}" >/dev/null 2>&1; then
-            echo "Tag ${{ steps.package_version.outputs.tag }} already exists"
-            exit 1
-          fi
-
       - name: Create Git tag
         run: |
           git config user.name "github-actions[bot]"

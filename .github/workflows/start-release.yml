@@ -85,11 +85,12 @@ jobs:
 
       - name: Check if version already exists
         run: |
-          if git rev-parse "v${{ steps.new_version.outputs.version }}" >/dev/null 2>&1; then
-            echo "❌ Tag v${{ steps.new_version.outputs.version }} already exists"
+          VERSION="${{ steps.new_version.outputs.version }}"
+          if git tag | grep -q "^v$VERSION$"; then
+            echo "❌ Tag v$VERSION already exists"
             exit 1
           fi
-          echo "✅ Version v${{ steps.new_version.outputs.version }} is available"
+          echo "✅ Version v$VERSION is available"
 
       - name: Create release branch
         run: |

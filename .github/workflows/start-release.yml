@@ -1,0 +1,148 @@
+name: Start Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version update type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - prepatch
+          - preminor
+          - premajor
+          - prerelease
+          - custom
+      custom_version:
+        description: 'Custom version (only if version_type is custom)'
+        required: false
+        type: string
+
+jobs:
+  start-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate custom version
+        if: ${{ github.event.inputs.version_type == 'custom' }}
+        run: |
+          if [ -z "${{ github.event.inputs.custom_version }}" ]; then
+            echo "❌ Custom version is required when version_type is 'custom'"
+            exit 1
+          fi
+          
+          # Validate version format using npm semver
+          npx semver "${{ github.event.inputs.custom_version }}" > /dev/null
+          if [ $? -ne 0 ]; then
+            echo "❌ Invalid version format: ${{ github.event.inputs.custom_version }}"
+            exit 1
+          fi
+          echo "✅ Version format is valid: ${{ github.event.inputs.custom_version }}"
+
+      - name: Get current version
+        id: current_version
+        run: |
+          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Determine new version
+        id: new_version
+        run: |
+          if [ "${{ github.event.inputs.version_type }}" == "custom" ]; then
+            NEW_VERSION="${{ github.event.inputs.custom_version }}"
+          else
+            # Use npm version to calculate new version without actually updating
+            NEW_VERSION=$(npm version ${{ github.event.inputs.version_type }} --dry-run | sed 's/^v//')
+          fi
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version will be: $NEW_VERSION"
+
+      - name: Check if version already exists
+        run: |
+          if git rev-parse "v${{ steps.new_version.outputs.version }}" >/dev/null 2>&1; then
+            echo "❌ Tag v${{ steps.new_version.outputs.version }} already exists"
+            exit 1
+          fi
+          echo "✅ Version v${{ steps.new_version.outputs.version }} is available"
+
+      - name: Create release branch
+        run: |
+          BRANCH_NAME="release/v${{ steps.new_version.outputs.version }}"
+          git checkout -b "$BRANCH_NAME"
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Update version
+        run: |
+          if [ "${{ github.event.inputs.version_type }}" == "custom" ]; then
+            npm version ${{ github.event.inputs.custom_version }} --no-git-tag-version --no-commit-hooks
+          else
+            npm version ${{ github.event.inputs.version_type }} --no-git-tag-version --no-commit-hooks
+          fi
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build package
+        run: npm run build
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          git commit -m "Release version ${{ steps.new_version.outputs.version }}"
+
+      - name: Push release branch
+        run: |
+          git push origin "${{ env.branch_name }}"
+
+      - name: Create Pull Request
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            const { data: pullRequest } = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Release v${{ steps.new_version.outputs.version }}`,
+              head: '${{ env.branch_name }}',
+              base: 'master',
+              body: `## Release v${{ steps.new_version.outputs.version }}
+
+              This PR was automatically created by the release workflow.
+
+              ### Changes
+              - Version updated from v${{ steps.current_version.outputs.version }} to v${{ steps.new_version.outputs.version }}
+              - package.json and package-lock.json updated
+
+              ### Pre-merge Checklist
+              - [ ] All CI checks pass
+              - [ ] Tests are passing
+              - [ ] Build is successful
+              - [ ] Version number is correct
+
+              Once this PR is merged, a new release will be automatically created and published to npm.`
+            });
+
+            console.log(`Pull request created: ${pullRequest.html_url}`);

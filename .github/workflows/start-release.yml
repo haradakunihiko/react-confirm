@@ -85,15 +85,8 @@ jobs:
       - name: Check if version already exists
         run: |
           VERSION="${{ steps.new_version.outputs.version }}"
-          echo "🔍 Checking for existing tag: v$VERSION"
-          echo "📋 All existing tags:"
-          git tag | sort -V
-          echo ""
-          echo "🔎 Looking for exact match: v$VERSION"
           if git tag | grep -q "^v$VERSION$"; then
             echo "❌ Tag v$VERSION already exists"
-            echo "📋 Matching tags:"
-            git tag | grep "v$VERSION"
             exit 1
           fi
           echo "✅ Version v$VERSION is available"

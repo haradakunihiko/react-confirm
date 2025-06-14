@@ -68,7 +68,7 @@ export const confirm = createConfirmation(YourDialog);
 Now, you can show dialog just like window.confirm with async-await. The most common example is onclick handler for submit buttons.
 
 ```js
-import { confirmWrapper, confirm } from './confirm'
+import { confirm } from './confirm'
 
 const handleOnClick = async () => {
   if (await confirm({

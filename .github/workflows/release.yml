@@ -1,0 +1,111 @@
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Extract version from branch name
+        id: branch_version
+        run: |
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          TAG=${BRANCH_NAME#release/}
+          VERSION=${TAG#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Found release: $TAG (version: $VERSION)"
+
+      - name: Get version from package.json
+        id: package_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Verify version consistency
+        run: |
+          EXPECTED_VERSION="${{ steps.branch_version.outputs.version }}"
+          ACTUAL_VERSION="${{ steps.package_version.outputs.version }}"
+          echo "Expected version (from branch): $EXPECTED_VERSION"
+          echo "Actual version (from package.json): $ACTUAL_VERSION"
+          
+          if [ "$ACTUAL_VERSION" != "$EXPECTED_VERSION" ]; then
+            echo "❌ Version mismatch! Expected $EXPECTED_VERSION but found $ACTUAL_VERSION"
+            exit 1
+          fi
+          echo "✅ Version verified: $ACTUAL_VERSION"
+
+      - name: Check if tag already exists
+        run: |
+          if git rev-parse "${{ steps.package_version.outputs.tag }}" >/dev/null 2>&1; then
+            echo "Tag ${{ steps.package_version.outputs.tag }} already exists"
+            exit 1
+          fi
+
+      - name: Create Git tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          COMMIT_SHA="${{ github.event.pull_request.merge_commit_sha }}"
+          git tag -a "${{ steps.package_version.outputs.tag }}" -m "Release version ${{ steps.package_version.outputs.version }}" "$COMMIT_SHA"
+          git push origin "${{ steps.package_version.outputs.tag }}"
+          echo "✅ Tag ${{ steps.package_version.outputs.tag }} created and pushed successfully"
+
+      - name: Create GitHub Release (Draft)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.package_version.outputs.tag }}"
+          
+          echo "Creating GitHub release draft for $TAG"
+          gh release create "$TAG" \
+            --title "Release $TAG" \
+            --generate-notes \
+            --draft
+          echo "✅ GitHub release draft created successfully"
+
+      - name: Clean up release branch
+        run: |
+          RELEASE_BRANCH="${{ github.event.pull_request.head.ref }}"
+          if [ -n "$RELEASE_BRANCH" ] && [ "$RELEASE_BRANCH" != "master" ]; then
+            git push origin --delete "$RELEASE_BRANCH" || echo "Branch $RELEASE_BRANCH may have been already deleted"
+          fi
+          echo "✅ Release branch deleted"
+
+      - name: Release Draft Created Successfully
+        run: |
+          TAG="${{ steps.package_version.outputs.tag }}"
+          VERSION="${{ steps.package_version.outputs.version }}"
+          
+          echo "🎉 Release draft for $TAG created successfully!"
+          echo ""
+          echo "📋 What was completed:"
+          echo "✅ Git tag $TAG created at merge commit"
+          echo "✅ GitHub release draft created with auto-generated notes"
+          echo "✅ Release branch cleaned up"
+          echo ""
+          echo "📝 Next steps:"
+          echo "1. Review the release draft: https://github.com/${{ github.repository }}/releases/tag/$TAG"
+          echo "2. Edit release notes if needed"
+          echo "3. Publish the release manually"
+          echo "4. npm publishing will start automatically after publishing"

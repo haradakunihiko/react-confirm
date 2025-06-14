@@ -75,10 +75,9 @@ jobs:
         id: new_version
         run: |
           if [ "${{ github.event.inputs.version_type }}" == "custom" ]; then
-            NEW_VERSION="${{ github.event.inputs.custom_version }}"
+            NEW_VERSION=$(npm version ${{ github.event.inputs.custom_version }} --no-git-tag-version --no-commit-hooks | sed 's/^v//')
           else
-            # Use npm version to calculate new version without actually updating
-            NEW_VERSION=$(npm version ${{ github.event.inputs.version_type }} --dry-run | sed 's/^v//')
+            NEW_VERSION=$(npm version ${{ github.event.inputs.version_type }} --no-git-tag-version --no-commit-hooks | sed 's/^v//')
           fi
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "New version will be: $NEW_VERSION"
@@ -104,14 +103,6 @@ jobs:
           BRANCH_NAME="release/v${{ steps.new_version.outputs.version }}"
           git checkout -b "$BRANCH_NAME"
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
-
-      - name: Update version
-        run: |
-          if [ "${{ github.event.inputs.version_type }}" == "custom" ]; then
-            npm version ${{ github.event.inputs.custom_version }} --no-git-tag-version --no-commit-hooks
-          else
-            npm version ${{ github.event.inputs.version_type }} --no-git-tag-version --no-commit-hooks
-          fi
 
       - name: Run tests
         run: npm test

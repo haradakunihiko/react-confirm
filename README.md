@@ -138,5 +138,6 @@ When defining your dialog component, set both the `Props` for the dialog and the
 
 
 ## Other Examples
-- [chakra-ui(using context) demo in codesandbox](https://codesandbox.io/s/react-confirm-with-chakra-ui-oidpf1)
-- [material-ui example](https://github.com/haradakunihiko/react-confirm/tree/master/example/material-ui)
+
+### Additional Reference
+For additional reference examples, you can also check the [react-confirm-sample](https://github.com/haradakunihiko/react-confirm-sample/) repository, which contains archived historical examples and some alternative implementations. Note that the primary examples and documentation are maintained here in this repository.

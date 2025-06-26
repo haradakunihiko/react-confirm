@@ -2,7 +2,7 @@ import * as React from 'react';
 
 type ConfirmableProps<P, R> = {
     dispose: () => void;
-    resolve: PromiseLike<R>;
+    resolve: (value: R | PromiseLike<R>) => void;
     reject: (reason?: any) => void;
 } & P;
 
@@ -32,18 +32,18 @@ export declare function createConfirmation<P, R>(
 ): (props: P) => Promise<R>;
 
 type Mounter = {
-  mount: (component: React.ComponentType, ) => string
+  mount: (component: React.ComponentType, props: any, mountNode?: HTMLElement) => string
   unmount: (key: string) => void
 }
 
 type TreeMounter = {
   options: {
-      setMountedCallback: (callback: any) => void
-      mountNode: Element | DocumentFragment
+      setMountedCallback: (callback: (components: any) => void) => void
+      mountNode?: Element | DocumentFragment | HTMLElement
   }
-} & Mounter;
+} & Mounter
 
-export declare function createReactTreeMounter(mountNode?: HTMLElement): TreeMounter;
-export declare function createMountPoint(moounter: TreeMounter): React.ComponentType;
-export declare function createDomTreeMounter(mountNode?: HTMLElement): Mounter;
+export declare function createReactTreeMounter(mountNode?: Element | DocumentFragment | HTMLElement): TreeMounter;
+export declare function createMountPoint(mounter: TreeMounter): React.ComponentType;
+export declare function createDomTreeMounter(defaultMountNode?: Element | DocumentFragment | HTMLElement): Mounter;
 export declare function createConfirmationCreater(mounter: Mounter): typeof createConfirmation;

@@ -5,11 +5,12 @@ export function createReactTreeMounter(mountNode) {
     const confirms = {};
     const callbacks = {};
 
-    function mount(Component, props){
+    function mount(Component, props, mountNode){
         const key = Math.floor(Math.random() * (1 << 30)).toString(16);
         confirms[key] = { Component, props};
         callbacks.mounted && callbacks.mounted(confirms);
         return key;
+        // mountNode is ignored - ReactTreeMounter uses options.mountNode instead
     }
     function unmount(key) {
         delete confirms[key];

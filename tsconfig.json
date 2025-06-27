@@ -21,10 +21,12 @@
     }
   },
   "include": [
-    "__tests__/**/*",
-    "typescript/**/*"
+    "src/**/*",
+    "typescript/**/*",
+    "__tests__/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "lib/**/*"
   ]
 }

@@ -27,7 +27,7 @@
     "prepublish": "npm run clean && npm run build",
     "test": "jest",
     "test:types": "jest __tests__/typescript/",
-    "typecheck": "tsc --noEmit --project tsconfig.test.json"
+    "typecheck": "tsc --noEmit"
   },
   "author": "",
   "license": "MIT",

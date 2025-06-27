@@ -1,143 +1,217 @@
 # react-confirm
-react-confirm is a lightweight library that simplifies the implementation of confirmation dialogs in React applications by offering a Promise-based API that works seamlessly with async/await syntax, similar to `window.confirm`.
 
-One key feature of react-confirm is that it doesn't provide a specific view or component for the confirmation dialog, allowing you to easily customize the appearance of the dialog to match your application's design.
+Create confirmation dialogs as simple as `window.confirm()`, but with full customization and Promise-based API.
 
 [![npm version](https://badge.fury.io/js/react-confirm.svg)](https://badge.fury.io/js/react-confirm)
+
+## What you can do
+
+**🎯 Simple confirmation dialogs**
+```typescript
+const result = await confirm({ message: 'Delete this item?' });
+if (result) {
+  // User confirmed
+}
+```
+
+**🎨 Fully customizable UI** - No built-in styling. Use your own components, UI libraries, or design system.
+
+**⚡ Promise-based API** - Works seamlessly with async/await, no complex state management needed.
+
+**🔄 React Context support** - Access your app's context, themes, and providers from within dialogs.
+
+**📦 Lightweight** - No dependencies, small bundle size.
 
 ## Demo
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/1_typescript)
 
-## Motivation
-React is a powerful library that allows for reactive rendering based on component state. However, managing temporary states like confirmation dialogs can quickly become complex. The question is: is it worth implementing these states within your app? The answer is not always a clear yes.
+## Quick Start
 
-## What you can do
-react-confirm library offers several benefits:
+### 1. Install
+```bash
+npm install react-confirm
+```
 
-- You can open a dialog component by calling a function without appending it into your React tree. The function returns a promise, allowing you to handle confirmation results with callbacks.
-- You can pass arguments to the function and use them inside the dialog component.
-- You can retrieve values from the component in the promise.
-- The library provides flexibility in designing the dialog. There is no limitation in the type of components you can use, whether it be input forms or multiple buttons. You can even check out the demo site to see examples of how to customize the dialog.
+### 2. Create your dialog and confirmation function
+```typescript
+import React from 'react';
+import { confirmable, createConfirmation, type ConfirmDialogProps } from 'react-confirm';
 
-## Versions
-
-- React 18+ users should use `react-confirm` version 0.2.x or 0.3.x
-- React <=17 users should stick to `react-confirm` version 0.1.x
-
-## Usage
-1. Create your dialog component.
-2. Apply `confirmable` HOC to your component (Optional. See `confirmable` implementation).
-3. Create a function using `createConfirmation` by passing your `confirmable` component.
-4. Call it!
-
-### Create your dialog component and Apply `confirmable` HOC to your component.
-
-```ts
-import * as React from 'react';
-
-import Modal from 'react-bootstrap/Modal'
-import Button from 'react-bootstrap/Button'
-
-import { confirmable, ConfirmDialog } from 'react-confirm';
-
-export interface Props {
-  confirmation?: string;
-};
-
-const Confirmation: ConfirmDialog<Props, boolean> = ({show, proceed, confirmation}) => (
-  <Dialog onHide={() => proceed(false)} show={show}>
-    {confirmation}
-    <button onClick={() => proceed(false)}>CANCEL</button>
-    <button onClick={() => proceed(true)}>OK</button>
-  </Dialog>
+const MyDialog = ({ show, proceed, message }: ConfirmDialogProps<{ message: string }, boolean>) => (
+  <div className={`dialog-overlay ${show ? 'show' : 'hide'}`}>
+    <div className="dialog">
+      <p>{message}</p>
+      <button onClick={() => proceed(true)}>Yes</button>
+      <button onClick={() => proceed(false)}>No</button>
+    </div>
+  </div>
 );
 
-export default confirmable(Confirmation);
+export const confirm = createConfirmation(confirmable(MyDialog));
 ```
 
-### Create a function using `createConfirmation`
-```js
-import { createConfirmation } from 'react-confirm';
-import YourDialog from './YourDialog';
+### 3. Use it!
+```typescript
+import { confirm } from './confirm';
 
-// create confirm function
-export const confirm = createConfirmation(YourDialog);
-```
-
-### Call it!
-Now, you can show dialog just like window.confirm with async-await. The most common example is onclick handler for submit buttons.
-
-```js
-import { confirm } from './confirm'
-
-const handleOnClick = async () => {
-  if (await confirm({
-    confirmation: 'Are you sure?'
-  })) {
-    console.log('yes');
-  } else {
-    console.log('no');
+const handleDelete = async (): Promise<void> => {
+  const result = await confirm({ 
+    message: 'Are you sure you want to delete this item?' 
+  });
+  
+  if (result) {
+    // User confirmed - proceed with deletion
+    deleteItem();
   }
+};
+
+// In your component
+<button onClick={handleDelete}>Delete Item</button>
+```
+
+## Using with React Context
+
+If your dialog needs to access React Context (themes, authentication, etc.), use the context-aware approach:
+
+### Simple Context Usage
+
+```typescript
+import React, { useContext } from 'react';
+import { confirmable, ContextAwareConfirmation, type ConfirmDialogProps } from 'react-confirm';
+
+interface Props {
+  message: string;
 }
 
+// 1. Add ConfirmationRoot to your app
+function App(): JSX.Element {
+  return (
+    <ThemeProvider>
+      <div>
+        <ContextAwareConfirmation.ConfirmationRoot />
+        <YourAppContent />
+      </div>
+    </ThemeProvider>
+  );
+}
+
+// 2. Create your dialog (can use useContext, useTheme, etc.)
+const ThemedDialog = ({ show, proceed, message }: ConfirmDialogProps<Props, boolean>) => {
+  const theme = useContext(ThemeContext); // ✅ Context works!
+  
+  return (
+    <div className={`dialog-overlay ${show ? 'show' : 'hide'}`} style={{ backgroundColor: theme.background }}>
+      <p>{message}</p>
+      <button onClick={() => proceed(true)}>Yes</button>
+      <button onClick={() => proceed(false)}>No</button>
+    </div>
+  );
+};
+
+// 3. Create confirmation function
+const confirm = ContextAwareConfirmation.createConfirmation(confirmable(ThemedDialog));
+
+// 4. Use anywhere in your app
+const handleAction = async (): Promise<void> => {
+  if (await confirm({ message: 'Continue?' })) {
+    // Confirmed!
+  }
+};
 ```
 
-You can check more complex example in [codesandbox](https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1)
+### Custom Context Setup
 
-## Using with Context
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/2_typescript_using_context)
+For more control, create your own context:
 
-By default, this library renders the confirmation dialog without appending the component to your app's React component tree. While this can be useful, it may cause issues if you need to consume context in your component. To overcome this problem, you can use the `MountPoint` component to include your confirmation dialog within your app's tree, enabling it to access context and other data from the app.
+```typescript
+import { createConfirmationContext } from 'react-confirm';
 
-Create your own `createConfirmation` function and `MountPoint` Component using `createConfirmationCreater` and `createReactTreeMounter`.
+// Create custom context (optional: specify mount node)
+const CustomContextAwareConfirmation = createConfirmationContext();
 
-```js
+// Use like the simple approach
+const confirm = CustomContextAwareConfirmation.createConfirmation(confirmable(MyDialog));
+
+function App(): JSX.Element {
+  return (
+    <div>
+      <CustomContextAwareConfirmation.ConfirmationRoot />
+      <YourApp />
+    </div>
+  );
+}
+```
+
+### Render in specific DOM element
+
+```typescript
+// Render confirmations in a specific DOM element
+const customNode = document.getElementById('modal-root');
+const CustomContextAwareConfirmation = createConfirmationContext(customNode);
+
+const confirm = CustomContextAwareConfirmation.createConfirmation(confirmable(MyDialog));
+```
+
+## TypeScript Support
+
+react-confirm has full TypeScript support with automatic type inference. Just define your props interface and response type:
+
+```typescript
+interface Props {
+  message: string;
+  type?: 'warning' | 'danger';
+}
+
+const MyDialog = ({ show, proceed, message, type }: ConfirmDialogProps<Props, boolean>) => (
+  <div className={`dialog-overlay ${show ? 'show' : 'hide'}`}>
+    <p>{message}</p>
+    <button onClick={() => proceed(true)}>Yes</button>
+    <button onClick={() => proceed(false)}>No</button>
+  </div>
+);
+
+const confirm = createConfirmation(confirmable(MyDialog));
+
+// Usage with full type safety
+const result: boolean = await confirm({ 
+  message: 'Delete?', 
+  type: 'danger' 
+});
+```
+
+
+## React Version Compatibility
+
+- **React 18+**: Use `react-confirm` version 0.2.x or 0.3.x
+- **React ≤17**: Use `react-confirm` version 0.1.x
+
+## Migration from Previous Versions
+
+If you're using the old context setup with `createReactTreeMounter` and `createMountPoint`, you can migrate to the simpler API:
+
+### Before (v0.2.x)
+```typescript
 import { createConfirmationCreater, createReactTreeMounter, createMountPoint } from 'react-confirm';
 
 const mounter = createReactTreeMounter();
-
 export const createConfirmation = createConfirmationCreater(mounter);
 export const MountPoint = createMountPoint(mounter);
 ```
 
-Put `MountPoint` into your React tree.
-```js
-const YourRootComponent = () => {
-  return (
-    <YourContext.Provider>
-      <MountPoint />
-      <YourApp />
-    </YourContext.Provider>
-  )
-}
+### After (v0.3.x)
+```typescript
+import { ContextAwareConfirmation } from 'react-confirm';
+
+// Use directly - same pattern as other examples
+export const createConfirmation = ContextAwareConfirmation.createConfirmation;
+export const MountPoint = ContextAwareConfirmation.ConfirmationRoot;
 ```
 
-use your `createConfirmation` as usual.
-```js
-export const confirm = createConfirmation(YourDialog);
-```
+## More Examples
 
-To render the confirmation dialog within the React component tree but in a different part of the DOM, you can pass a DOM element to the `createReactTreeMounter` function. This will use the `createPortal` method to render the confirmation dialog in the specified DOM element while keeping it within the React component tree.
+- [TypeScript Example](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/1_typescript)
+- [Context Example](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/2_typescript_using_context)
+- [Bootstrap Example](https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1)
+- [Chakra UI Example](https://codesandbox.io/s/react-confirm-with-chakra-ui-oidpf1)
 
-```js
-const mounter = createReactTreeMounter(document.body);
-```
-
-### example
-Context example with Chakra-ui in [codesandbox](https://codesandbox.io/s/react-confirm-with-chakra-ui-oidpf1)
-
-## typescript usage
-Below, we present two possible ways to define a confirmation dialog component using react-confirm. You can choose either based on your preference.
-
-```ts
-const Confirmation1: React.FC<ConfirmDialogProps<Props, Response>> = (props) => (<Dialog></Dialog>)
-const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog></Dialog>)
-```
-
-When defining your dialog component, set both the `Props` for the dialog and the `Response` value to be passed when the dialog closes. This will be handy when calling the dialog.
-
-
-## Other Examples
-
-### Additional Reference
-For additional reference examples, you can also check the [react-confirm-sample](https://github.com/haradakunihiko/react-confirm-sample/) repository, which contains archived historical examples and some alternative implementations. Note that the primary examples and documentation are maintained here in this repository.
+For more examples, check the [react-confirm-sample](https://github.com/haradakunihiko/react-confirm-sample/) repository.

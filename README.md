@@ -125,7 +125,7 @@ const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog />);
 
 ## Examples
 
-- [Example](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/1_typescript) - Complete TypeScript implementation.
+- [Simple Example](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/1_typescript) - Complete TypeScript implementation.
 - [Context Example](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/2_typescript_using_context) - Using React Context with themes and providers
 
 Source code for these examples can be found in the [react-confirm-sample](https://github.com/haradakunihiko/react-confirm-sample/) repository, which also contains some archived older implementations.

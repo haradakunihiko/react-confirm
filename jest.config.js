@@ -13,6 +13,11 @@ module.exports = {
     moduleNameMapper: {
         '^src$': '<rootDir>/src/index.js',
     },
+    globals: {
+        'ts-jest': {
+            tsconfig: 'tsconfig.test.json'
+        }
+    },
     collectCoverageFrom: [
         'src/**/*.{js,ts,tsx}',
         'typescript/**/*.{ts,d.ts}',

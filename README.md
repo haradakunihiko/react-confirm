@@ -76,15 +76,13 @@ If your dialog needs to access React Context (themes, authentication, etc.), use
 
 ### Simple Context Usage
 
+Key differences from Quick Start:
+
 ```typescript
-import React, { useContext } from 'react';
+// 1. Import ContextAwareConfirmation instead of createConfirmation
 import { confirmable, ContextAwareConfirmation, type ConfirmDialogProps } from 'react-confirm';
 
-interface Props {
-  message: string;
-}
-
-// 1. Add ConfirmationRoot to your app
+// 2. Add ConfirmationRoot to your app
 function App(): JSX.Element {
   return (
     <ThemeProvider>
@@ -96,53 +94,15 @@ function App(): JSX.Element {
   );
 }
 
-// 2. Create your dialog (can use useContext, useTheme, etc.)
+// 3. Your dialog can now use context
 const ThemedDialog = ({ show, proceed, message }: ConfirmDialogProps<Props, boolean>) => {
   const theme = useContext(ThemeContext); // ✅ Context works!
-  
-  return (
-    <div className={`dialog-overlay ${show ? 'show' : 'hide'}`} style={{ backgroundColor: theme.background }}>
-      <p>{message}</p>
-      <button onClick={() => proceed(true)}>Yes</button>
-      <button onClick={() => proceed(false)}>No</button>
-    </div>
-  );
+  // ... rest of dialog implementation
 };
 
-// 3. Create confirmation function
+// 4. Use ContextAwareConfirmation.createConfirmation
 const confirm = ContextAwareConfirmation.createConfirmation(confirmable(ThemedDialog));
-
-// 4. Use anywhere in your app
-const handleAction = async (): Promise<void> => {
-  if (await confirm({ message: 'Continue?' })) {
-    // Confirmed!
-  }
-};
 ```
-
-### Custom Context Setup
-
-For more control, create your own context:
-
-```typescript
-import { createConfirmationContext } from 'react-confirm';
-
-// Create custom context (optional: specify mount node)
-const CustomContextAwareConfirmation = createConfirmationContext();
-
-// Use like the simple approach
-const confirm = CustomContextAwareConfirmation.createConfirmation(confirmable(MyDialog));
-
-function App(): JSX.Element {
-  return (
-    <div>
-      <CustomContextAwareConfirmation.ConfirmationRoot />
-      <YourApp />
-    </div>
-  );
-}
-```
-
 
 ## TypeScript Support
 

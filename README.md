@@ -123,11 +123,9 @@ const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog />);
 - **React ≤17**: Use `react-confirm` version 0.1.x
 
 
-## More Examples
+## Examples
 
-- [TypeScript Example](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/1_typescript)
-- [Context Example](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/2_typescript_using_context)
-- [Bootstrap Example](https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1)
-- [Chakra UI Example](https://codesandbox.io/s/react-confirm-with-chakra-ui-oidpf1)
+- [Example](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/1_typescript) - Complete TypeScript implementation.
+- [Context Example](https://stackblitz.com/fork/github/haradakunihiko/react-confirm-sample/tree/main/2_typescript_using_context) - Using React Context with themes and providers
 
-For additional reference examples, you can also check the [react-confirm-sample](https://github.com/haradakunihiko/react-confirm-sample/) repository, which contains archived historical examples and some alternative implementations. **Check the examples above first for the latest patterns.**
+Source code for these examples can be found in the [react-confirm-sample](https://github.com/haradakunihiko/react-confirm-sample/) repository, which also contains some archived older implementations.

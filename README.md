@@ -170,4 +170,4 @@ const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog />);
 - [Bootstrap Example](https://codesandbox.io/s/react-confirm-with-react-bootstrap-kjju1)
 - [Chakra UI Example](https://codesandbox.io/s/react-confirm-with-chakra-ui-oidpf1)
 
-For more examples, check the [react-confirm-sample](https://github.com/haradakunihiko/react-confirm-sample/) repository.
+For additional reference examples, you can also check the [react-confirm-sample](https://github.com/haradakunihiko/react-confirm-sample/) repository, which contains archived historical examples and some alternative implementations. **Check the examples above first for the latest patterns.**

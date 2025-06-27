@@ -2,11 +2,10 @@ import * as React from 'react';
 import {
   ConfirmDialogProps,
   ConfirmDialog,
-} from '../../typescript/index';
+} from '../../typescript';
 
 // Import actual implementations for testing
-import confirmable from '../../src/confirmable';
-import createConfirmation from '../../src/createConfirmation';
+import { confirmable, createConfirmation } from 'src';
 
 // Test interfaces for constraint testing
 interface StrictProps {

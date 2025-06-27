@@ -10,6 +10,9 @@ module.exports = {
         '**/*.(test|spec).(js|ts|tsx)',
     ],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+    moduleNameMapper: {
+        '^src$': '<rootDir>/src/index.js',
+    },
     collectCoverageFrom: [
         'src/**/*.{js,ts,tsx}',
         'typescript/**/*.{ts,d.ts}',

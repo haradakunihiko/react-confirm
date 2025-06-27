@@ -47,3 +47,10 @@ export declare function createReactTreeMounter(mountNode?: Element | DocumentFra
 export declare function createMountPoint(mounter: TreeMounter): React.ComponentType;
 export declare function createDomTreeMounter(defaultMountNode?: Element | DocumentFragment | HTMLElement): Mounter;
 export declare function createConfirmationCreater(mounter: Mounter): typeof createConfirmation;
+
+// Context-aware confirmation system
+export { 
+  createConfirmationContext, 
+  ContextAwareConfirmation,
+  ConfirmationContext
+} from './context';

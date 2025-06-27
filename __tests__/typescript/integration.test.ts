@@ -4,13 +4,11 @@ import '@testing-library/jest-dom';
 import {
   ConfirmDialogProps,
   ConfirmDialog,
-} from '../../typescript/index';
+} from '../../typescript';
 
 // Import actual implementations for testing
-import confirmable from '../../src/confirmable';
-import createConfirmation, { createConfirmationCreater } from '../../src/createConfirmation';
-import { createReactTreeMounter, createMountPoint } from '../../src/mounter/reactTree';
-import { createDomTreeMounter } from '../../src/mounter/domTree';
+import {confirmable, createConfirmation, createConfirmationCreater, createReactTreeMounter, createMountPoint, createDomTreeMounter} from 'src';
+
 
 // Test interfaces for integration testing
 interface DeleteConfirmProps {

@@ -55,6 +55,7 @@ export const confirm = createConfirmation(confirmable(MyDialog));
 import { confirm } from './confirm';
 
 const handleDelete = async (): Promise<void> => {
+  // Fully type-safe: message is required, result is boolean
   const result = await confirm({ 
     message: 'Are you sure you want to delete this item?' 
   });
@@ -142,41 +143,17 @@ function App(): JSX.Element {
 }
 ```
 
-### Render in specific DOM element
-
-```typescript
-// Render confirmations in a specific DOM element
-const customNode = document.getElementById('modal-root');
-const CustomContextAwareConfirmation = createConfirmationContext(customNode);
-
-const confirm = CustomContextAwareConfirmation.createConfirmation(confirmable(MyDialog));
-```
 
 ## TypeScript Support
 
-react-confirm has full TypeScript support with automatic type inference. Just define your props interface and response type:
+TypeScript automatically infers types from your dialog's Props definition, making the confirmation function fully type-safe.
 
 ```typescript
-interface Props {
-  message: string;
-  type?: 'warning' | 'danger';
-}
+// Option 1: Using React.FC with ConfirmDialogProps
+const Confirmation1: React.FC<ConfirmDialogProps<Props, Response>> = (props) => (<Dialog />);
 
-const MyDialog = ({ show, proceed, message, type }: ConfirmDialogProps<Props, boolean>) => (
-  <div className={`dialog-overlay ${show ? 'show' : 'hide'}`}>
-    <p>{message}</p>
-    <button onClick={() => proceed(true)}>Yes</button>
-    <button onClick={() => proceed(false)}>No</button>
-  </div>
-);
-
-const confirm = createConfirmation(confirmable(MyDialog));
-
-// Usage with full type safety
-const result: boolean = await confirm({ 
-  message: 'Delete?', 
-  type: 'danger' 
-});
+// Option 2: Using ConfirmDialog type
+const Confirmation2: ConfirmDialog<Props, Response> = (props) => (<Dialog />);
 ```
 
 
@@ -185,27 +162,6 @@ const result: boolean = await confirm({
 - **React 18+**: Use `react-confirm` version 0.2.x or 0.3.x
 - **React ≤17**: Use `react-confirm` version 0.1.x
 
-## Migration from Previous Versions
-
-If you're using the old context setup with `createReactTreeMounter` and `createMountPoint`, you can migrate to the simpler API:
-
-### Before (v0.2.x)
-```typescript
-import { createConfirmationCreater, createReactTreeMounter, createMountPoint } from 'react-confirm';
-
-const mounter = createReactTreeMounter();
-export const createConfirmation = createConfirmationCreater(mounter);
-export const MountPoint = createMountPoint(mounter);
-```
-
-### After (v0.3.x)
-```typescript
-import { ContextAwareConfirmation } from 'react-confirm';
-
-// Use directly - same pattern as other examples
-export const createConfirmation = ContextAwareConfirmation.createConfirmation;
-export const MountPoint = ContextAwareConfirmation.ConfirmationRoot;
-```
 
 ## More Examples
 

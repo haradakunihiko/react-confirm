@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "src": ["./typescript/index.d.ts"]
+    }
+  },
+  "include": [
+    "__tests__/**/*"
+  ]
+}

@@ -3,7 +3,7 @@ module.exports = {
     preset: 'ts-jest/presets/js-with-ts',
     transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest',
-        '^.+\\.(js|jsx)$': 'babel-jest',
+        '^.+\\.(js|jsx)$': 'ts-jest',
     },
     testMatch: [
         '**/__tests__/**/*.(js|ts|tsx)',
@@ -11,11 +11,10 @@ module.exports = {
     ],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
     moduleNameMapper: {
-        '^src$': '<rootDir>/src/index.js',
+        '^src$': '<rootDir>/src/index.ts',
     },
     collectCoverageFrom: [
         'src/**/*.{js,ts,tsx}',
-        'typescript/**/*.{ts,d.ts}',
         '!**/*.d.ts',
         '!**/node_modules/**',
     ],

@@ -7,6 +7,16 @@ import {
   ContextAwareConfirmation
 } from './context';
 
+// Re-export all types from centralized types file
+export type {
+  ConfirmDialogProps,
+  ConfirmDialog,
+  ConfirmableDialog,
+  Mounter,
+  TreeMounter,
+  ConfirmationContext
+} from './types';
+
 export { 
   confirmable, 
   createConfirmation, 

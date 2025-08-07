@@ -1,8 +1,20 @@
 {
   "name": "react-confirm",
   "version": "0.4.0",
-  "description": "Small library which makes your Dialog component callable",
-  "main": "lib/index.js",
+  "description": "A lightweight React library that simplifies confirmation dialogs with Promise-based API, similar to window.confirm() but customizable",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/haradakunihiko/react-confirm.git"
@@ -13,39 +25,43 @@
   "keywords": [
     "react",
     "reactjs",
-    "confirm"
+    "confirm",
+    "confirmation",
+    "dialog",
+    "modal",
+    "promise",
+    "async",
+    "typescript",
+    "ui",
+    "component"
   ],
   "homepage": "https://github.com/haradakunihiko/react-confirm",
   "files": [
-    "lib",
+    "dist",
     "src",
-    "typescript"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
-    "clean": "rimraf lib",
-    "build": "babel src --out-dir lib",
-    "prepublish": "npm run clean && npm run build",
+    "clean": "rimraf dist",
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run clean && npm run build && npm test",
     "test": "jest",
     "test:types": "jest __tests__/typescript/",
     "typecheck": "tsc --noEmit"
   },
-  "author": "",
+  "author": "haradakunihiko",
   "license": "MIT",
   "peerDependencies": {
     "react": ">=18.x",
     "react-dom": ">=18.x"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.6",
-    "@babel/core": "^7.27.4",
-    "@babel/preset-env": "^7.16.11",
-    "@babel/preset-react": "^7.16.7",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "babel-jest": "^29.5.0",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
     "react": ">=18.2.0",
@@ -55,6 +71,5 @@
     "ts-jest": "^29.1.0",
     "typescript": "^5.0.0"
   },
-  "dependencies": {},
-  "typings": "typescript/index.d.ts"
+  "dependencies": {}
 }

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+const { useState, useEffect } = React;
 import { createPortal } from 'react-dom';
 import type { Mounter } from '../createConfirmation';
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createReactTreeMounter, createMountPoint, TreeMounter } from './mounter/reactTree';
 import { createConfirmationCreater } from './createConfirmation';
 import type { ConfirmableDialog } from './confirmable';

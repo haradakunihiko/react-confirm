@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import type { Mounter } from '../createConfirmation';
 export type TreeMounter = {
     options: {

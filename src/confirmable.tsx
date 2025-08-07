@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+const { useState } = React;
 
 type ConfirmableProps<P, R> = {
     dispose: () => void;

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 type ConfirmableProps<P, R> = {
     dispose: () => void;
     resolve: (value: R | PromiseLike<R>) => void;

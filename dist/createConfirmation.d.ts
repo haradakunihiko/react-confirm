@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import type { ConfirmableDialog } from './confirmable';
 export type Mounter = {
     mount: (component: React.ComponentType, props: any, mountNode?: HTMLElement) => string;

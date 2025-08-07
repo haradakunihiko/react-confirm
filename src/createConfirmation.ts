@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createDomTreeMounter } from './mounter/domTree';
 import type { ConfirmableDialog } from './confirmable';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
-import type { Mounter } from '../createConfirmation';
+import type { Mounter } from '../types';
 
 export function createDomTreeMounter(
   defaultMountNode?: Element | DocumentFragment | HTMLElement

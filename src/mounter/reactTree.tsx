@@ -1,14 +1,7 @@
 import * as React from 'react';
 const { useState, useEffect } = React;
 import { createPortal } from 'react-dom';
-import type { Mounter } from '../createConfirmation';
-
-export type TreeMounter = {
-  options: {
-      setMountedCallback: (callback: (components: any) => void) => void
-      mountNode?: Element | DocumentFragment | HTMLElement
-  }
-} & Mounter
+import type { Mounter, TreeMounter } from '../types';
 
 export function createReactTreeMounter(
   mountNode?: Element | DocumentFragment | HTMLElement

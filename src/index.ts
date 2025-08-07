@@ -7,16 +7,15 @@ import {
   ContextAwareConfirmation
 } from './context';
 
-// Re-export all types from individual modules
+// Re-export all types from centralized types file
 export type {
   ConfirmDialogProps,
   ConfirmDialog,
-  ConfirmableDialog
-} from './confirmable';
-
-export type { Mounter } from './createConfirmation';
-export type { TreeMounter } from './mounter/reactTree';
-export type { ConfirmationContext } from './context';
+  ConfirmableDialog,
+  Mounter,
+  TreeMounter,
+  ConfirmationContext
+} from './types';
 
 export { 
   confirmable, 

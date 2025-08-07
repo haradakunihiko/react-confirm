@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { createDomTreeMounter } from './mounter/domTree';
-import type { ConfirmableDialog } from './confirmable';
-
-export type Mounter = {
-  mount: (component: React.ComponentType, props: any, mountNode?: HTMLElement) => string
-  unmount: (key: string) => void
-}
+import type { ConfirmableDialog, Mounter } from './types';
 
 export const createConfirmationCreater = (mounter: Mounter) => <P, R>(
   Component: ConfirmableDialog<P, R>,

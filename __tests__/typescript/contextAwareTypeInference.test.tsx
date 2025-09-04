@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { ConfirmDialogProps } from '../../typescript';
+import { ConfirmDialogProps } from 'src';
 import { confirmable, ContextAwareConfirmation, createConfirmationContext } from 'src';
 
 

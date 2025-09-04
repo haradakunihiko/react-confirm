@@ -5,7 +5,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import confirmable from '../src/confirmable';
 
-const TestComponent = ({ cancel, dismiss, proceed, show }) => {
+const TestComponent = ({ cancel, dismiss, proceed, show }: any) => {
   if (!show) return null;
 
   return (
@@ -23,7 +23,7 @@ const TestComponent = ({ cancel, dismiss, proceed, show }) => {
   );
 };
 
-const ConfirmableTestComponent = confirmable(TestComponent);
+const ConfirmableTestComponent = confirmable<any, any>(TestComponent);
 
 describe('confirmable', () => {
     test('calls cancel function', async () => {
@@ -83,3 +83,4 @@ describe('confirmable', () => {
     expect(screen.queryByTestId('proceed-button')).not.toBeInTheDocument();
   });
 });
+

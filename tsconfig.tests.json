@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["jest", "node"]
+  },
+  "include": [
+    "__tests__/**/*"
+  ],
+  "exclude": [
+    "__tests__/typescript/compatibility.test.ts"
+  ]
+}

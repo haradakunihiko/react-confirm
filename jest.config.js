@@ -1,20 +1,20 @@
 module.exports = {
     testEnvironment: 'jsdom',
-    preset: 'ts-jest/presets/js-with-ts',
+    preset: 'ts-jest',
     transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest',
-        '^.+\\.(js|jsx)$': 'babel-jest',
     },
+    setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     testMatch: [
-        '**/__tests__/**/*.(js|ts|tsx)',
-        '**/*.(test|spec).(js|ts|tsx)',
+        '**/__tests__/**/*.(ts|tsx)',
+        '**/*.(test|spec).(ts|tsx)',
     ],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
     moduleNameMapper: {
-        '^src$': '<rootDir>/src/index.js',
+        '^src$': '<rootDir>/src/index.ts',
     },
     collectCoverageFrom: [
-        'src/**/*.{js,ts,tsx}',
+        'src/**/*.{ts,tsx}',
         'typescript/**/*.{ts,d.ts}',
         '!**/*.d.ts',
         '!**/node_modules/**',

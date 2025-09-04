@@ -1,10 +1,11 @@
 import * as React from 'react';
+import { act } from 'react-dom/test-utils';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import {
   ConfirmDialogProps,
   ConfirmDialog,
-} from '../../typescript';
+} from 'src';
 
 // Import actual implementations for testing
 import {confirmable, createConfirmation, createConfirmationCreater, createReactTreeMounter, createMountPoint, createDomTreeMounter} from 'src';
@@ -81,10 +82,13 @@ describe('TypeScript Integration Tests', () => {
       const confirmDelete = createConfirmation(ConfirmableDeleteDialog);
 
       // Test the confirmation flow
-      const confirmationPromise = confirmDelete({
-        itemName: 'test-file.txt',
-        itemCount: 1,
-        isDangerous: true,
+      let confirmationPromise!: Promise<any>;
+      await act(async () => {
+        confirmationPromise = confirmDelete({
+          itemName: 'test-file.txt',
+          itemCount: 1,
+          isDangerous: true,
+        });
       });
 
       expect(confirmationPromise).toBeInstanceOf(Promise);
@@ -123,7 +127,10 @@ describe('TypeScript Integration Tests', () => {
       const ConfirmableSimpleDialog = confirmable(SimpleDialog);
       const confirmSimple = createConfirmation(ConfirmableSimpleDialog);
 
-      const promise = confirmSimple({ message: 'Do you agree?' });
+      let promise!: Promise<any>;
+      await act(async () => {
+        promise = confirmSimple({ message: 'Do you agree?' });
+      });
       expect(promise).toBeInstanceOf(Promise);
     });
   });
@@ -177,7 +184,7 @@ describe('TypeScript Integration Tests', () => {
   });
 
   describe('DOM Tree Mounter Integration', () => {
-    it('should work with DOM tree mounting system', () => {
+    it('should work with DOM tree mounting system', async () => {
       const TestDialog: ConfirmDialog<SimpleProps, SimpleResponse> = (props) => {
         return React.createElement('div', {}, props.message);
       };
@@ -194,12 +201,15 @@ describe('TypeScript Integration Tests', () => {
       expect(typeof domMounter.unmount).toBe('function');
       expect(typeof confirm).toBe('function');
 
-      // Test the confirmation function  
-      const result = confirm({ message: 'Test message' });
+      // Test the confirmation function
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirm({ message: 'Test message' });
+      });
       expect(result).toBeInstanceOf(Promise);
     });
 
-    it('should work with custom mount node for DOM mounter', () => {
+    it('should work with custom mount node for DOM mounter', async () => {
       const customMountNode = document.createElement('div');
       document.body.appendChild(customMountNode);
 
@@ -217,7 +227,10 @@ describe('TypeScript Integration Tests', () => {
       expect(typeof confirm).toBe('function');
 
       // Test the confirmation function
-      const result = confirm({ message: 'Test message' });
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirm({ message: 'Test message' });
+      });
       expect(result).toBeInstanceOf(Promise);
 
       // Cleanup
@@ -226,7 +239,7 @@ describe('TypeScript Integration Tests', () => {
   });
 
   describe('Complex Real-world Scenarios', () => {
-    it('should handle complex form confirmation dialog', () => {
+    it('should handle complex form confirmation dialog', async () => {
       interface FormConfirmProps {
         formData: {
           name: string;
@@ -302,16 +315,19 @@ describe('TypeScript Integration Tests', () => {
       const ConfirmableFormDialog = confirmable(FormConfirmDialog);
       const confirmForm = createConfirmation(ConfirmableFormDialog);
 
-      const result = confirmForm({
-        formData: {
-          name: 'John Doe',
-          email: 'john@example.com',
-          preferences: {
-            notifications: true,
-            newsletter: false,
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirmForm({
+          formData: {
+            name: 'John Doe',
+            email: 'john@example.com',
+            preferences: {
+              notifications: true,
+              newsletter: false,
+            },
           },
-        },
-        hasUnsavedChanges: true,
+          hasUnsavedChanges: true,
+        });
       });
 
       expect(result).toBeInstanceOf(Promise);
@@ -376,15 +392,18 @@ describe('TypeScript Integration Tests', () => {
       const ConfirmableAsyncDialog = confirmable(AsyncDialog);
       const confirmAsync = createConfirmation(ConfirmableAsyncDialog);
 
-      const result = confirmAsync({
-        operation: 'Delete all files',
-        requiresConfirmation: true,
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirmAsync({
+          operation: 'Delete all files',
+          requiresConfirmation: true,
+        });
       });
 
       expect(result).toBeInstanceOf(Promise);
 
       // Test that promise can be handled properly
-      result.then((response: AsyncResponse) => {
+      result!.then((response: AsyncResponse) => {
         expect(typeof response.success).toBe('boolean');
         if (!response.success) {
           expect(typeof response.error).toBe('string');
@@ -397,7 +416,7 @@ describe('TypeScript Integration Tests', () => {
   });
 
   describe('Error Handling and Edge Cases', () => {
-    it('should handle component that never calls proceed or cancel', () => {
+    it('should handle component that never calls proceed or cancel', async () => {
       const NeverResolvingDialog: ConfirmDialog<SimpleProps, SimpleResponse> = (props) => {
         if (!props.show) {
           return null;
@@ -413,12 +432,15 @@ describe('TypeScript Integration Tests', () => {
       const ConfirmableNeverResolvingDialog = confirmable(NeverResolvingDialog);
       const confirmNeverResolving = createConfirmation(ConfirmableNeverResolvingDialog);
 
-      const result = confirmNeverResolving({ message: 'This will hang' });
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirmNeverResolving({ message: 'This will hang' });
+      });
       expect(result).toBeInstanceOf(Promise);
 
       // The promise should remain pending, which is the expected behavior
       let resolved = false;
-      result.then(() => { resolved = true; }).catch(() => { resolved = true; });
+      result!.then(() => { resolved = true; }).catch(() => { resolved = true; });
       
       // Since the dialog never resolves, this should still be false after a short delay
       setTimeout(() => {
@@ -426,7 +448,7 @@ describe('TypeScript Integration Tests', () => {
       }, 100);
     });
 
-    it('should handle component that calls dismiss', () => {
+    it('should handle component that calls dismiss', async () => {
       const DismissibleDialog: ConfirmDialog<SimpleProps, SimpleResponse> = (props) => {
         if (!props.show) {
           return null;
@@ -449,7 +471,10 @@ describe('TypeScript Integration Tests', () => {
       const ConfirmableDismissibleDialog = confirmable(DismissibleDialog);
       const confirmDismissible = createConfirmation(ConfirmableDismissibleDialog);
 
-      const result = confirmDismissible({ message: 'Can be dismissed' });
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirmDismissible({ message: 'Can be dismissed' });
+      });
       expect(result).toBeInstanceOf(Promise);
     });
   });

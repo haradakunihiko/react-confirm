@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { act } from 'react-dom/test-utils';
 import {
   ConfirmDialogProps,
   ConfirmDialog,
-} from '../../typescript';
+} from 'src';
 
 // Import actual implementations for testing
 import { confirmable, createConfirmation } from 'src';
@@ -62,7 +63,7 @@ describe('TypeScript Type Constraints Tests', () => {
       expect(typeof ConfirmableTestDialog).toBe('function');
     });
 
-    it('should preserve readonly properties in props', () => {
+    it('should preserve readonly properties in props', async () => {
       const TestDialog: ConfirmDialog<StrictProps, StrictResponse> = (props) => {
         // id should be readonly, so we can read it but not modify it
         const idValue = props.id; // ✓ Reading is allowed
@@ -72,17 +73,19 @@ describe('TypeScript Type Constraints Tests', () => {
 
       const ConfirmableTestDialog = confirmable(TestDialog);
       const confirm = createConfirmation(ConfirmableTestDialog);
-      
-      const result = confirm({
-        id: 123,
-        name: 'Test',
-        optional: 'Optional value',
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirm({
+          id: 123,
+          name: 'Test',
+          optional: 'Optional value',
+        });
       });
       
       expect(result).toBeInstanceOf(Promise);
     });
 
-    it('should handle optional properties correctly', () => {
+    it('should handle optional properties correctly', async () => {
       const TestDialog: ConfirmDialog<StrictProps, StrictResponse> = (props) => {
         // optional property may or may not be present
         const optionalValue = props.optional ?? 'default value';
@@ -94,18 +97,20 @@ describe('TypeScript Type Constraints Tests', () => {
 
       const ConfirmableTestDialog = confirmable(TestDialog);
       const confirm = createConfirmation(ConfirmableTestDialog);
-      
-      // Test with optional property
-      const resultWithOptional = confirm({
-        id: 1,
-        name: 'Test',
-        optional: 'provided',
-      });
-      
-      // Test without optional property
-      const resultWithoutOptional = confirm({
-        id: 2,
-        name: 'Test2',
+      let resultWithOptional!: Promise<any>;
+      let resultWithoutOptional!: Promise<any>;
+      await act(async () => {
+        // Test with optional property
+        resultWithOptional = confirm({
+          id: 1,
+          name: 'Test',
+          optional: 'provided',
+        });
+        // Test without optional property
+        resultWithoutOptional = confirm({
+          id: 2,
+          name: 'Test2',
+        });
       });
       
       expect(resultWithOptional).toBeInstanceOf(Promise);
@@ -169,32 +174,34 @@ describe('TypeScript Type Constraints Tests', () => {
   });
 
   describe('createConfirmation Type Constraints', () => {
-    it('should enforce correct props type in confirmation function', () => {
+    it('should enforce correct props type in confirmation function', async () => {
       const TestDialog: ConfirmDialog<StrictProps, StrictResponse> = (props) => {
         return React.createElement('div', {}, props.name);
       };
 
       const ConfirmableTestDialog = confirmable(TestDialog);
       const confirm = createConfirmation(ConfirmableTestDialog);
-
-      // Should require all required properties from StrictProps
-      const validCall = confirm({
-        id: 1,
-        name: 'Required name',
-        optional: 'Optional value', // optional can be provided
-      });
-
-      const validCallWithoutOptional = confirm({
-        id: 2,
-        name: 'Required name',
-        // optional can be omitted
+      let validCall!: Promise<any>;
+      let validCallWithoutOptional!: Promise<any>;
+      await act(async () => {
+        // Should require all required properties from StrictProps
+        validCall = confirm({
+          id: 1,
+          name: 'Required name',
+          optional: 'Optional value', // optional can be provided
+        });
+        validCallWithoutOptional = confirm({
+          id: 2,
+          name: 'Required name',
+          // optional can be omitted
+        });
       });
 
       expect(validCall).toBeInstanceOf(Promise);
       expect(validCallWithoutOptional).toBeInstanceOf(Promise);
     });
 
-    it('should return promise with correct response type', () => {
+    it('should return promise with correct response type', async () => {
       const TestDialog: ConfirmDialog<StrictProps, StrictResponse> = (props) => {
         // Simulate proceeding with correct response type
         setTimeout(() => {
@@ -209,17 +216,19 @@ describe('TypeScript Type Constraints Tests', () => {
 
       const ConfirmableTestDialog = confirmable(TestDialog);
       const confirm = createConfirmation(ConfirmableTestDialog);
-
-      const promise = confirm({
-        id: 1,
-        name: 'Test',
+      let promise!: Promise<any>;
+      await act(async () => {
+        promise = confirm({
+          id: 1,
+          name: 'Test',
+        });
       });
 
       // Promise should resolve to StrictResponse type
       expect(promise).toBeInstanceOf(Promise);
       
       // Type assertion to verify the promise resolves to correct type
-      return promise.then((result: StrictResponse) => {
+      return promise!.then((result: StrictResponse) => {
         expect(typeof result.success).toBe('boolean');
         expect(typeof result.timestamp).toBe('number');
       }).catch(() => {
@@ -280,7 +289,7 @@ describe('TypeScript Type Constraints Tests', () => {
       expect(typeof ConditionalDialog).toBe('function');
     });
 
-    it('should work with mapped types', () => {
+    it('should work with mapped types', async () => {
       type MakeOptional<T> = {
         [K in keyof T]?: T[K];
       };
@@ -299,13 +308,15 @@ describe('TypeScript Type Constraints Tests', () => {
 
       const ConfirmableMappedDialog = confirmable(MappedDialog);
       const confirm = createConfirmation(ConfirmableMappedDialog);
-
-      // All properties should be optional
-      const result = confirm({});
+      let result!: Promise<any>;
+      await act(async () => {
+        // All properties should be optional
+        result = confirm({});
+      });
       expect(result).toBeInstanceOf(Promise);
     });
 
-    it('should work with intersection types', () => {
+    it('should work with intersection types', async () => {
       interface BaseProps {
         id: number;
       }
@@ -322,11 +333,13 @@ describe('TypeScript Type Constraints Tests', () => {
 
       const ConfirmableIntersectionDialog = confirmable(IntersectionDialog);
       const confirm = createConfirmation(ConfirmableIntersectionDialog);
-
-      // Should require both id and name
-      const result = confirm({
-        id: 1,
-        name: 'Test',
+      let result!: Promise<any>;
+      await act(async () => {
+        // Should require both id and name
+        result = confirm({
+          id: 1,
+          name: 'Test',
+        });
       });
 
       expect(result).toBeInstanceOf(Promise);

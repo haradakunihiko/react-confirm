@@ -2,6 +2,7 @@ import confirmable from './confirmable';
 import createConfirmation, { createConfirmationCreater } from './createConfirmation';
 import { createDomTreeMounter } from './mounter/domTree';
 import { createReactTreeMounter, createMountPoint } from './mounter/reactTree';
+import { abort as abortConfirmation, abortAll as abortAllConfirmations } from './controls';
 import { 
   createConfirmationContext, 
   ContextAwareConfirmation
@@ -24,6 +25,8 @@ export {
   createDomTreeMounter, 
   createReactTreeMounter, 
   createMountPoint,
+  abortConfirmation as abort,
+  abortAllConfirmations as abortAll,
   createConfirmationContext,
   ContextAwareConfirmation
 };

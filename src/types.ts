@@ -45,7 +45,7 @@ export interface ConfirmationContext {
   createConfirmation: <P, R>(
     component: ConfirmableDialog<P, R>,
     unmountDelay?: number
-  ) => (props: P) => Promise<R>;
+  ) => (props: P, control?: { signal?: AbortSignal }) => Promise<R>;
 
   /**
    * React component that must be rendered in your app to display confirmations

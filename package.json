@@ -1,6 +1,6 @@
 {
   "name": "react-confirm",
-  "version": "0.4.0",
+  "version": "0.5.0-1",
   "description": "A lightweight React library that simplifies confirmation dialogs with a Promise-based API — like window.confirm(), but fully customizable.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

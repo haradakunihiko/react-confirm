@@ -44,4 +44,5 @@ var createConfirmationCreater = function (mounter) {
     };
 };
 exports.createConfirmationCreater = createConfirmationCreater;
-exports.default = (0, exports.createConfirmationCreater)((0, domTree_1.createDomTreeMounter)());
+var defaultCreateConfirmation = (0, exports.createConfirmationCreater)((0, domTree_1.createDomTreeMounter)());
+exports.default = defaultCreateConfirmation;

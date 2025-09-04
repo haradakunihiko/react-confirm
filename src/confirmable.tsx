@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import type { ConfirmableProps, ConfirmDialog } from './types';
+import type { ConfirmableProps, ConfirmDialog, ConfirmableDialog } from './types';
 
-const confirmable = <P, R>(Component: ConfirmDialog<P, R>) =>
+const confirmable: <P, R>(Component: ConfirmDialog<P, R>) => ConfirmableDialog<P, R> =
+<P, R>(Component: ConfirmDialog<P, R>) =>
   ({ dispose, reject, resolve, ...other }: ConfirmableProps<P, R>) => {
     const [show, setShow] = useState(true);
 

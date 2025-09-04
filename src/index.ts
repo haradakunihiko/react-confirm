@@ -10,6 +10,9 @@ import {
 export type {
   ConfirmDialogProps,
   ConfirmDialog,
+  ConfirmableDialog,
+  Mounter,
+  TreeMounter,
   ConfirmationContext,
 } from './types';
 

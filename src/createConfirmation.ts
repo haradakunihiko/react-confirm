@@ -35,4 +35,9 @@ export const createConfirmationCreater = (mounter: Mounter) =>
     };
   };
 
-export default createConfirmationCreater(createDomTreeMounter());
+const defaultCreateConfirmation = createConfirmationCreater(createDomTreeMounter());
+export default defaultCreateConfirmation as <P, R>(
+  component: ConfirmableDialog<P, R>,
+  unmountDelay?: number,
+  mountingNode?: HTMLElement
+) => (props: P) => Promise<R>;

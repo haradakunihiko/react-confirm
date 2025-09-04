@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   ConfirmDialogProps,
   ConfirmDialog,
-} from '../../typescript';
+} from 'src';
 
 // Import actual implementations for testing
 import { confirmable, createConfirmation } from 'src';

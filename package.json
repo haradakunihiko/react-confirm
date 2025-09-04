@@ -1,7 +1,7 @@
 {
   "name": "react-confirm",
   "version": "0.4.0",
-  "description": "Small library which makes your Dialog component callable",
+  "description": "A lightweight React library that simplifies confirmation dialogs with a Promise-based API — like window.confirm(), but fully customizable.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -23,24 +23,35 @@
   "keywords": [
     "react",
     "reactjs",
-    "confirm"
+    "confirm",
+    "confirmation",
+    "dialog",
+    "modal",
+    "promise",
+    "async",
+    "typescript",
+    "ui",
+    "component"
   ],
   "homepage": "https://github.com/haradakunihiko/react-confirm",
   "sideEffects": false,
   "files": [
     "dist",
+    "src",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
+    "pretest": "npm run build",
     "clean": "rimraf dist lib",
     "build": "tsc -p tsconfig.build.json",
     "prepublishOnly": "npm run clean && npm run build && npm test",
     "test": "jest",
     "test:types": "jest __tests__/typescript/",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "npm run build && tsc --noEmit",
+    "typecheck:tests": "npm run build && tsc -p tsconfig.tests.json"
   },
-  "author": "",
+  "author": "haradakunihiko",
   "license": "MIT",
   "peerDependencies": {
     "react": ">=18.x",

@@ -1,3 +1,3 @@
-import type { ConfirmableProps, ConfirmDialog } from './types';
-declare const confirmable: <P, R>(Component: ConfirmDialog<P, R>) => ({ dispose, reject, resolve, ...other }: ConfirmableProps<P, R>) => import("react/jsx-runtime").JSX.Element;
+import type { ConfirmDialog, ConfirmableDialog } from './types';
+declare const confirmable: <P, R>(Component: ConfirmDialog<P, R>) => ConfirmableDialog<P, R>;
 export default confirmable;

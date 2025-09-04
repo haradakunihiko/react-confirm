@@ -70,6 +70,33 @@ const handleDelete = async (): Promise<void> => {
 <button onClick={handleDelete}>Delete Item</button>
 ```
 
+## Cancellation (Abort)
+
+You can cancel a pending confirmation in two ways:
+
+- Via AbortController (recommended)
+```ts
+import { abort, ContextAwareConfirmation } from 'react-confirm';
+
+const confirmX = ContextAwareConfirmation.createConfirmation(confirmable(MyDialog));
+const ac = new AbortController();
+const p = confirmX({ message: 'Delete?' }, { signal: ac.signal });
+// Later
+ac.abort(); // p rejects with AbortError and dialog closes
+```
+
+- Via utility functions
+```ts
+import { abort, abortAll } from 'react-confirm';
+const p = confirm({ message: 'Delete?' });
+abort(p);     // cancel one
+abortAll();   // cancel all pending
+```
+
+Notes:
+- `createConfirmation` runner supports an optional second argument `{ signal?: AbortSignal }`.
+- Caught errors have `name === 'AbortError'` when cancelled.
+
 ## Using with React Context
 
 If your dialog needs to access React Context (themes, authentication, etc.), use the context-aware approach:

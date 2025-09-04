@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { act } from 'react-dom/test-utils';
 import {
   ConfirmDialogProps,
   ConfirmDialog,
@@ -138,7 +139,7 @@ describe('TypeScript Type Tests', () => {
   });
 
   describe('createConfirmation', () => {
-    it('should create a confirmation function with correct signature', () => {
+    it('should create a confirmation function with correct signature', async () => {
       const TestDialog: ConfirmDialog<TestProps, TestResponse> = (props) => {
         return React.createElement('div', {}, props.title);
       };
@@ -149,7 +150,10 @@ describe('TypeScript Type Tests', () => {
       expect(typeof confirm).toBe('function');
 
       // Test that the confirmation function returns a Promise
-      const result = confirm({ title: 'Test', message: 'Test Message' });
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirm({ title: 'Test', message: 'Test Message' });
+      });
       expect(result).toBeInstanceOf(Promise);
     });
 
@@ -227,7 +231,7 @@ describe('TypeScript Type Tests', () => {
   });
 
   describe('Generic Type Constraints', () => {
-    it('should work with simple types', () => {
+    it('should work with simple types', async () => {
       interface SimpleProps {
         value: string;
       }
@@ -241,11 +245,14 @@ describe('TypeScript Type Tests', () => {
       const ConfirmableSimpleDialog = confirmable(SimpleDialog);
       const confirm = createConfirmation(ConfirmableSimpleDialog);
       
-      const result = confirm({ value: 'test' });
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirm({ value: 'test' });
+      });
       expect(result).toBeInstanceOf(Promise);
     });
 
-    it('should work with complex nested types', () => {
+    it('should work with complex nested types', async () => {
       interface ComplexProps {
         data: {
           nested: {
@@ -271,20 +278,23 @@ describe('TypeScript Type Tests', () => {
       const ConfirmableComplexDialog = confirmable(ComplexDialog);
       const confirm = createConfirmation(ConfirmableComplexDialog);
       
-      const result = confirm({
-        data: {
-          nested: {
-            value: 42,
-            optional: true,
-          }
-        },
-        callback: (arg: string) => {},
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirm({
+          data: {
+            nested: {
+              value: 42,
+              optional: true,
+            }
+          },
+          callback: (arg: string) => {},
+        });
       });
       
       expect(result).toBeInstanceOf(Promise);
     });
 
-    it('should work with union types', () => {
+    it('should work with union types', async () => {
       interface UnionProps {
         mode: 'edit' | 'view' | 'delete';
         data: string | number | boolean;
@@ -299,9 +309,12 @@ describe('TypeScript Type Tests', () => {
       const ConfirmableUnionDialog = confirmable(UnionDialog);
       const confirm = createConfirmation(ConfirmableUnionDialog);
       
-      const result = confirm({
-        mode: 'edit',
-        data: 'test',
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirm({
+          mode: 'edit',
+          data: 'test',
+        });
       });
       
       expect(result).toBeInstanceOf(Promise);
@@ -325,7 +338,7 @@ describe('TypeScript Type Tests', () => {
     //   expect(result).toBeInstanceOf(Promise);
     // });
 
-    it('should work with void response type', () => {
+    it('should work with void response type', async () => {
       interface VoidResponseProps {
         message: string;
       }
@@ -339,13 +352,16 @@ describe('TypeScript Type Tests', () => {
       const ConfirmableVoidResponseDialog = confirmable(VoidResponseDialog);
       const confirm = createConfirmation(ConfirmableVoidResponseDialog);
       
-      const result = confirm({ message: 'test' });
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirm({ message: 'test' });
+      });
       expect(result).toBeInstanceOf(Promise);
     });
   });
 
   describe('Type Inference', () => {
-    it('should infer types correctly from component definition', () => {
+    it('should infer types correctly from component definition', async () => {
       // Define a dialog without explicit generic parameters
       const InferredDialog = (props: ConfirmDialogProps<{ title: string }, boolean>) => {
         return React.createElement('div', {}, props.title);
@@ -355,7 +371,10 @@ describe('TypeScript Type Tests', () => {
       const confirm = createConfirmation(ConfirmableInferredDialog);
 
       // TypeScript should infer the correct parameter and return types
-      const result = confirm({ title: 'Inferred' });
+      let result!: Promise<any>;
+      await act(async () => {
+        result = confirm({ title: 'Inferred' });
+      });
       expect(result).toBeInstanceOf(Promise);
     });
   });

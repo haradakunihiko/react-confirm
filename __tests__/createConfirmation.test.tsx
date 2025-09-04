@@ -7,7 +7,7 @@ import React from 'react';
 import { createConfirmationCreater } from '../src/createConfirmation';
 import { createDomTreeMounter } from '../src/mounter/domTree';
 
-const MyComponent = ({ resolve, reject }) => (
+const MyComponent = ({ resolve, reject }: any) => (
   <div>
     <button onClick={() => resolve('success')}>Resolve</button>
     <button onClick={() => reject('error')}>Reject</button>
@@ -23,21 +23,21 @@ describe('createConfirmationCreater', () => {
   test('mounts and unmounts the component, and resolves the promise', async () => {
     const confirmMyComponent = confirm(MyComponent);
 
-    let result;
+    let result: Promise<any>;
     await act(async () => {
-      result = confirmMyComponent();
+      result = confirmMyComponent({} as any);
     });
 
     await waitFor(() => {
       expect(spy).toHaveBeenCalled();
     });
 
-    const resolveButton = document.querySelector('button');
+    const resolveButton = document.querySelector('button')!;
     await act(async () => {
       fireEvent.click(resolveButton);
     });
 
-    await expect(result).resolves.toBe('success');
+    await expect(result!).resolves.toBe('success');
 
     await waitFor(() => {
       expect(unmountSpy).toHaveBeenCalled();
@@ -47,21 +47,21 @@ describe('createConfirmationCreater', () => {
   test('mounts and unmounts the component, and rejects the promise', async () => {
     const confirmMyComponent = confirm(MyComponent);
   
-    let result;
+    let result: Promise<any>;
     await act(async () => {
-      result = confirmMyComponent().catch((e) => e); // ここで.catchを追加してエラーを無視しないようにする
+      result = confirmMyComponent({} as any).catch((e: any) => e);
     });
   
     await waitFor(() => {
       expect(spy).toHaveBeenCalled();
     });
   
-    const rejectButton = document.querySelectorAll('button')[1];
+    const rejectButton = document.querySelectorAll('button')[1]!;
     await act(async () => {
       fireEvent.click(rejectButton);
     });
   
-    const error = await result;
+    const error = await result!;
     expect(error).toBe('error');
   
     await waitFor(() => {
@@ -70,3 +70,4 @@ describe('createConfirmationCreater', () => {
   });
   
 });
+

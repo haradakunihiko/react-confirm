@@ -1,4 +1,4 @@
-// createReactTreeMounter.test.js
+// createReactTreeMounter.test.tsx
 import 'regenerator-runtime/runtime';
 import '@testing-library/jest-dom/extend-expect';
 import { act } from 'react-dom/test-utils'; 
@@ -7,12 +7,11 @@ import { render, screen } from '@testing-library/react';
 
 import { createReactTreeMounter, createMountPoint } from '../../src/mounter/reactTree';
 
-
-const MyComponent = ({ text }) => <div data-testid="my-component">{text}</div>;
+const MyComponent = ({ text }: any) => <div data-testid="my-component">{text}</div>;
 
 describe('createReactTreeMounter and createMountPoint', () => {
-  let mounter;
-  let MountPoint;
+  let mounter: ReturnType<typeof createReactTreeMounter>;
+  let MountPoint: React.ComponentType;
 
   beforeEach(() => {
     mounter = createReactTreeMounter();
@@ -22,21 +21,19 @@ describe('createReactTreeMounter and createMountPoint', () => {
   test('mounts a component and unmounts it', () => {
     render(<MountPoint />);
   
-    let key;
+    let key: string;
     act(() => {
-      key = mounter.mount(MyComponent, { text: 'Hello, world!' });
+      key = mounter.mount(MyComponent as any, { text: 'Hello, world!' });
     });
   
-    // Check if the component is mounted
     const mountedComponent = screen.getByTestId('my-component');
     expect(mountedComponent).toBeInTheDocument();
     expect(mountedComponent).toHaveTextContent('Hello, world!');
   
     act(() => {
-      mounter.unmount(key);
+      mounter.unmount(key!);
     });
   
-    // Check if the component is unmounted
     const unmountedComponent = screen.queryByTestId('my-component');
     expect(unmountedComponent).not.toBeInTheDocument();
   });
@@ -51,40 +48,36 @@ describe('createReactTreeMounter and createMountPoint', () => {
   
     render(<MountPointWithNode />);
   
-    let key;
+    let key: string;
     act(() => {
-      key = mounterWithNode.mount(MyComponent, { text: 'Hello, world!' });
+      key = mounterWithNode.mount(MyComponent as any, { text: 'Hello, world!' });
     });
   
-    // Check if the component is mounted in the correct mount node
-    const mountedComponent = mountNode.querySelector('[data-testid="my-component"]');
+    const mountedComponent = mountNode.querySelector('[data-testid="my-component"]')!;
     expect(mountedComponent).toBeInTheDocument();
-    expect(mountedComponent).toHaveTextContent('Hello, world!');
+    expect(mountedComponent.textContent).toContain('Hello, world!');
   
     act(() => {
-      mounterWithNode.unmount(key);
+      mounterWithNode.unmount(key!);
     });
   
-    // Check if the component is unmounted
     const unmountedComponent = mountNode.querySelector('[data-testid="my-component"]');
     expect(unmountedComponent).not.toBeInTheDocument();
   });
   
 });
 
-
 // Create a test context
-const TestContext = React.createContext();
+const TestContext = React.createContext<string | undefined>(undefined);
 
 const MyComponentWithContext = () => {
   const contextValue = useContext(TestContext);
   return <div data-testid="my-component">{contextValue}</div>;
 };
 
-
 describe('createReactTreeMounter and createMountPoint with context', () => {
-  let mounter;
-  let MountPoint;
+  let mounter: ReturnType<typeof createReactTreeMounter>;
+  let MountPoint: React.ComponentType;
 
   beforeEach(() => {
     mounter = createReactTreeMounter();
@@ -98,22 +91,21 @@ describe('createReactTreeMounter and createMountPoint with context', () => {
       </TestContext.Provider>
     );
   
-    let key;
+    let key: string;
     act(() => {
-      key = mounter.mount(MyComponentWithContext);
+      key = mounter.mount(MyComponentWithContext as any, {});
     });
   
-    // Check if the component is mounted and receives the context value
     const mountedComponent = screen.getByTestId('my-component');
     expect(mountedComponent).toBeInTheDocument();
     expect(mountedComponent).toHaveTextContent('Hello, world!');
   
     act(() => {
-      mounter.unmount(key);
+      mounter.unmount(key!);
     });
   
-    // Check if the component is unmounted
     const unmountedComponent = screen.queryByTestId('my-component');
     expect(unmountedComponent).not.toBeInTheDocument();
   });
 });
+

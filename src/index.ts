@@ -7,6 +7,12 @@ import {
   ContextAwareConfirmation
 } from './context';
 
+export type {
+  ConfirmDialogProps,
+  ConfirmDialog,
+  ConfirmationContext,
+} from './types';
+
 export { 
   confirmable, 
   createConfirmation, 

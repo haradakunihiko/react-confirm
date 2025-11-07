@@ -72,9 +72,26 @@ const handleDelete = async (): Promise<void> => {
 
 ## Cancellation (Abort)
 
-You can cancel a pending confirmation dialog from outside using one of two approaches:
+You can cancel a pending confirmation dialog from outside.
 
-### Using AbortController (Recommended)
+### Basic Usage
+
+```typescript
+import { confirm, abort, abortAll } from 'react-confirm';
+
+const p1 = confirm({ message: 'Delete item 1?' });
+const p2 = confirm({ message: 'Delete item 2?' });
+
+// Cancel a specific confirmation
+abort(p1);
+
+// Cancel all pending confirmations
+abortAll();
+```
+
+### Advanced: Using AbortController
+
+For more fine-grained control, you can use the standard `AbortController` pattern:
 
 ```typescript
 import { confirm } from './confirm';
@@ -108,21 +125,6 @@ const handleOperation = async (): Promise<void> => {
     }
   }
 };
-```
-
-### Using Utility Functions
-
-```typescript
-import { confirm, abort, abortAll } from './confirm';
-
-const p1 = confirm({ message: 'Delete item 1?' });
-const p2 = confirm({ message: 'Delete item 2?' });
-
-// Cancel a specific confirmation
-abort(p1);
-
-// Cancel all pending confirmations
-abortAll();
 ```
 
 **Note**: When a confirmation is aborted, the Promise rejects with an `AbortError` (with `name === 'AbortError'`), and the dialog UI is automatically unmounted.

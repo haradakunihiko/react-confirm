@@ -1,6 +1,6 @@
 "use strict";
-// 未解決の確認ダイアログを外部から制御するための軽量なレジストリ
-// UIの状態ではなく、制御用のハンドル（reject/dispose）のみを保持
+// Lightweight registry to control pending confirmations from outside
+// Stores only control handles (reject/dispose), not UI state
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -23,7 +23,7 @@ exports.abort = abort;
 exports.abortAll = abortAll;
 exports.attachAbortSignal = attachAbortSignal;
 /**
- * 確認ダイアログをキャンセルする際にスローされるカスタムエラー
+ * Custom error thrown when a confirmation is cancelled
  */
 var AbortError = /** @class */ (function (_super) {
     __extends(AbortError, _super);
@@ -38,28 +38,28 @@ var AbortError = /** @class */ (function (_super) {
 exports.AbortError = AbortError;
 var active = new Map();
 /**
- * AbortErrorを作成する（reasonが提供されていない場合）
+ * Create an AbortError (or use provided reason if available)
  */
 function createAbortError(reason) {
     if (reason !== undefined)
         return reason;
-    // DOMExceptionが利用可能であれば使用（標準的なAbortError）
+    // Use DOMException if available (standard AbortError)
     if (typeof DOMException !== 'undefined') {
         try {
             return new DOMException('Aborted', 'AbortError');
         }
         catch (_a) {
-            // フォールバック
+            // Fallback
         }
     }
     return new AbortError();
 }
 /**
- * Promiseとそのハンドルをレジストリに登録
+ * Register a Promise and its handle to the registry
  */
 function register(promise, handle) {
     active.set(promise, handle);
-    // settled後は自動的にクリーンアップ
+    // Auto cleanup after settlement
     promise
         .finally(function () {
         var h = active.get(promise);
@@ -68,14 +68,14 @@ function register(promise, handle) {
         active.delete(promise);
     })
         .catch(function () {
-        // finallyで処理済みなので無視
+        // Already handled by finally
     });
 }
 /**
- * 個別のPromiseをキャンセル
- * @param promise キャンセルするPromise
- * @param reason キャンセル理由（省略時はAbortErrorが使用される）
- * @returns キャンセルに成功した場合はtrue
+ * Cancel an individual Promise
+ * @param promise The Promise to cancel
+ * @param reason The cancellation reason (defaults to AbortError)
+ * @returns true if cancellation was successful
  */
 function abort(promise, reason) {
     var handle = active.get(promise);
@@ -89,16 +89,16 @@ function abort(promise, reason) {
             handle.dispose();
         }
         catch (_a) {
-            // 無視
+            // Ignore
         }
         active.delete(promise);
     }
     return true;
 }
 /**
- * 全ての未解決Promiseをキャンセル
- * @param reason キャンセル理由（省略時はAbortErrorが使用される）
- * @returns キャンセルされたPromiseの数
+ * Cancel all pending Promises
+ * @param reason The cancellation reason (defaults to AbortError)
+ * @returns The number of cancelled Promises
  */
 function abortAll(reason) {
     var items = Array.from(active.entries());
@@ -117,7 +117,7 @@ function abortAll(reason) {
                 h.dispose();
             }
             catch (_b) {
-                // 無視
+                // Ignore
             }
             active.delete(p);
             count++;
@@ -126,16 +126,16 @@ function abortAll(reason) {
     return count;
 }
 /**
- * AbortSignalをPromiseに紐付ける
- * @param signal AbortSignal
- * @param promise 紐付けるPromise
- * @returns デタッチ用の関数
+ * Attach an AbortSignal to a Promise
+ * @param signal The AbortSignal
+ * @param promise The Promise to attach to
+ * @returns A function to detach the signal
  */
 function attachAbortSignal(signal, promise) {
     var onAbort = function () {
         abort(promise, signal.reason);
     };
-    // 既にabortedの場合は即座に実行
+    // Execute immediately if already aborted
     if (signal.aborted) {
         onAbort();
         return function () { };

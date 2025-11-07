@@ -1,8 +1,8 @@
-// 未解決の確認ダイアログを外部から制御するための軽量なレジストリ
-// UIの状態ではなく、制御用のハンドル（reject/dispose）のみを保持
+// Lightweight registry to control pending confirmations from outside
+// Stores only control handles (reject/dispose), not UI state
 
 /**
- * 確認ダイアログをキャンセルする際にスローされるカスタムエラー
+ * Custom error thrown when a confirmation is cancelled
  */
 export class AbortError extends Error {
   constructor(message: string = 'Aborted') {
@@ -12,7 +12,7 @@ export class AbortError extends Error {
 }
 
 /**
- * 確認ダイアログの制御ハンドル
+ * Control handle for a confirmation dialog
  */
 export type ConfirmationHandle = {
   reject: (reason?: Error) => void;
@@ -23,17 +23,17 @@ export type ConfirmationHandle = {
 const active = new Map<Promise<unknown>, ConfirmationHandle>();
 
 /**
- * AbortErrorを作成する（reasonが提供されていない場合）
+ * Create an AbortError (or use provided reason if available)
  */
 function createAbortError(reason?: Error): Error {
   if (reason !== undefined) return reason;
 
-  // DOMExceptionが利用可能であれば使用（標準的なAbortError）
+  // Use DOMException if available (standard AbortError)
   if (typeof DOMException !== 'undefined') {
     try {
       return new DOMException('Aborted', 'AbortError');
     } catch {
-      // フォールバック
+      // Fallback
     }
   }
 
@@ -41,12 +41,12 @@ function createAbortError(reason?: Error): Error {
 }
 
 /**
- * Promiseとそのハンドルをレジストリに登録
+ * Register a Promise and its handle to the registry
  */
 export function register(promise: Promise<unknown>, handle: ConfirmationHandle): void {
   active.set(promise, handle);
 
-  // settled後は自動的にクリーンアップ
+  // Auto cleanup after settlement
   promise
     .finally(() => {
       const h = active.get(promise);
@@ -54,15 +54,15 @@ export function register(promise: Promise<unknown>, handle: ConfirmationHandle):
       active.delete(promise);
     })
     .catch(() => {
-      // finallyで処理済みなので無視
+      // Already handled by finally
     });
 }
 
 /**
- * 個別のPromiseをキャンセル
- * @param promise キャンセルするPromise
- * @param reason キャンセル理由（省略時はAbortErrorが使用される）
- * @returns キャンセルに成功した場合はtrue
+ * Cancel an individual Promise
+ * @param promise The Promise to cancel
+ * @param reason The cancellation reason (defaults to AbortError)
+ * @returns true if cancellation was successful
  */
 export function abort(promise: Promise<unknown>, reason?: Error): boolean {
   const handle = active.get(promise);
@@ -74,7 +74,7 @@ export function abort(promise: Promise<unknown>, reason?: Error): boolean {
     try {
       handle.dispose();
     } catch {
-      // 無視
+      // Ignore
     }
     active.delete(promise);
   }
@@ -83,9 +83,9 @@ export function abort(promise: Promise<unknown>, reason?: Error): boolean {
 }
 
 /**
- * 全ての未解決Promiseをキャンセル
- * @param reason キャンセル理由（省略時はAbortErrorが使用される）
- * @returns キャンセルされたPromiseの数
+ * Cancel all pending Promises
+ * @param reason The cancellation reason (defaults to AbortError)
+ * @returns The number of cancelled Promises
  */
 export function abortAll(reason?: Error): number {
   const items = Array.from(active.entries());
@@ -103,7 +103,7 @@ export function abortAll(reason?: Error): number {
       try {
         h.dispose();
       } catch {
-        // 無視
+        // Ignore
       }
       active.delete(p);
       count++;
@@ -114,17 +114,17 @@ export function abortAll(reason?: Error): number {
 }
 
 /**
- * AbortSignalをPromiseに紐付ける
- * @param signal AbortSignal
- * @param promise 紐付けるPromise
- * @returns デタッチ用の関数
+ * Attach an AbortSignal to a Promise
+ * @param signal The AbortSignal
+ * @param promise The Promise to attach to
+ * @returns A function to detach the signal
  */
 export function attachAbortSignal(signal: AbortSignal, promise: Promise<unknown>): () => void {
   const onAbort = () => {
     abort(promise, signal.reason);
   };
 
-  // 既にabortedの場合は即座に実行
+  // Execute immediately if already aborted
   if (signal.aborted) {
     onAbort();
     return () => {};

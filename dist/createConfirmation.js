@@ -43,9 +43,9 @@ var createConfirmationCreater = function (mounter) {
                 dispose();
                 return Promise.reject(err);
             });
-            // 外部からのキャンセルのためにレジストリに登録
+            // Register to registry for external cancellation
             (0, controls_1.register)(wrapped, { reject: rejectRef, dispose: dispose });
-            // AbortSignalが提供されていれば紐付ける
+            // Attach AbortSignal if provided
             if (options === null || options === void 0 ? void 0 : options.signal) {
                 var detach = (0, controls_1.attachAbortSignal)(options.signal, wrapped);
                 wrapped.finally(detach).catch(function () { });

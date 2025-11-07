@@ -37,10 +37,10 @@ export const createConfirmationCreater = (mounter: Mounter) =>
         }
       );
 
-      // 外部からのキャンセルのためにレジストリに登録
+      // Register to registry for external cancellation
       register(wrapped, { reject: rejectRef, dispose });
 
-      // AbortSignalが提供されていれば紐付ける
+      // Attach AbortSignal if provided
       if (options?.signal) {
         const detach = attachAbortSignal(options.signal, wrapped);
         wrapped.finally(detach).catch(() => {});

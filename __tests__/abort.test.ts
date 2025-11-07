@@ -2,7 +2,7 @@ import * as React from 'react';
 import { confirmable, createConfirmation, abort, abortAll } from 'src';
 
 describe('Cancellation (abort) behavior', () => {
-  // 自動的に解決しないダイアログ（手動でabortするまで待機）
+  // Dialog that doesn't auto-resolve (waits until manually aborted)
   const HangingDialog = ({ show }: any) => (show ? React.createElement('div', { 'data-testid': 'hanging' }) : null);
   const ConfirmableHanging = confirmable(HangingDialog);
 
@@ -10,17 +10,17 @@ describe('Cancellation (abort) behavior', () => {
     const confirm = createConfirmation(ConfirmableHanging);
     const p = confirm({});
 
-    // Promiseが未解決であることを確認
+    // Verify Promise is still pending
     const res = await Promise.race([
       p.then(() => ({ status: 'fulfilled' })).catch((e) => ({ status: 'rejected', error: e })),
       new Promise((resolve) => setTimeout(resolve, 0)).then(() => 'tick'),
     ]);
     expect(res).toBe('tick');
 
-    // abort実行
+    // Execute abort
     abort(p);
 
-    // AbortErrorでrejectされることを確認
+    // Verify it rejects with AbortError
     await expect(p).rejects.toMatchObject({ name: 'AbortError' });
   });
 
@@ -29,7 +29,7 @@ describe('Cancellation (abort) behavior', () => {
     const p1 = confirm({});
     const p2 = confirm({});
 
-    // 全てをabort
+    // Abort all
     abortAll();
 
     const [r1, r2] = await Promise.allSettled([p1, p2]);
@@ -53,11 +53,11 @@ describe('Cancellation (abort) behavior', () => {
     const confirm = createConfirmation(ConfirmableHanging);
     const p = confirm({});
 
-    // 先にabort
+    // Abort first
     const result = abort(p);
     expect(result).toBe(true);
 
-    // settled後に再度abortを試みる
+    // Try to abort again after settlement
     await p.catch(() => {});
     const result2 = abort(p);
     expect(result2).toBe(false);
@@ -70,7 +70,7 @@ describe('Cancellation (abort) behavior', () => {
 
     const p = confirm({}, { signal: ac.signal });
 
-    // 既にabortedなので即座にreject
+    // Should reject immediately since signal is already aborted
     await expect(p).rejects.toMatchObject({ name: 'AbortError' });
   });
 
@@ -80,21 +80,21 @@ describe('Cancellation (abort) behavior', () => {
     const p2 = confirm({});
     const p3 = confirm({});
 
-    // p2だけをabort
+    // Abort only p2
     abort(p2);
 
-    // p2はabortされるが、p1とp3はまだpending
+    // p2 is aborted but p1 and p3 are still pending
     const r2 = await p2.catch((e) => e);
     expect(r2).toMatchObject({ name: 'AbortError' });
 
-    // p1とp3がまだpendingであることを確認
+    // Verify p1 and p3 are still pending
     const res1 = await Promise.race([
       p1.then(() => 'resolved').catch(() => 'rejected'),
       new Promise((resolve) => setTimeout(() => resolve('pending'), 10)),
     ]);
     expect(res1).toBe('pending');
 
-    // p1とp3をクリーンアップ
+    // Cleanup p1 and p3
     abort(p1);
     abort(p3);
   });

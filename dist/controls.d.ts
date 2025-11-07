@@ -1,11 +1,11 @@
 /**
- * 確認ダイアログをキャンセルする際にスローされるカスタムエラー
+ * Custom error thrown when a confirmation is cancelled
  */
 export declare class AbortError extends Error {
     constructor(message?: string);
 }
 /**
- * 確認ダイアログの制御ハンドル
+ * Control handle for a confirmation dialog
  */
 export type ConfirmationHandle = {
     reject: (reason?: Error) => void;
@@ -13,26 +13,26 @@ export type ConfirmationHandle = {
     settled?: boolean;
 };
 /**
- * Promiseとそのハンドルをレジストリに登録
+ * Register a Promise and its handle to the registry
  */
 export declare function register(promise: Promise<unknown>, handle: ConfirmationHandle): void;
 /**
- * 個別のPromiseをキャンセル
- * @param promise キャンセルするPromise
- * @param reason キャンセル理由（省略時はAbortErrorが使用される）
- * @returns キャンセルに成功した場合はtrue
+ * Cancel an individual Promise
+ * @param promise The Promise to cancel
+ * @param reason The cancellation reason (defaults to AbortError)
+ * @returns true if cancellation was successful
  */
 export declare function abort(promise: Promise<unknown>, reason?: Error): boolean;
 /**
- * 全ての未解決Promiseをキャンセル
- * @param reason キャンセル理由（省略時はAbortErrorが使用される）
- * @returns キャンセルされたPromiseの数
+ * Cancel all pending Promises
+ * @param reason The cancellation reason (defaults to AbortError)
+ * @returns The number of cancelled Promises
  */
 export declare function abortAll(reason?: Error): number;
 /**
- * AbortSignalをPromiseに紐付ける
- * @param signal AbortSignal
- * @param promise 紐付けるPromise
- * @returns デタッチ用の関数
+ * Attach an AbortSignal to a Promise
+ * @param signal The AbortSignal
+ * @param promise The Promise to attach to
+ * @returns A function to detach the signal
  */
 export declare function attachAbortSignal(signal: AbortSignal, promise: Promise<unknown>): () => void;

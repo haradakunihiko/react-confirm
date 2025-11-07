@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ContextAwareConfirmation = exports.createConfirmationContext = exports.createMountPoint = exports.createReactTreeMounter = exports.createDomTreeMounter = exports.createConfirmationCreater = exports.createConfirmation = exports.confirmable = void 0;
+exports.abortAll = exports.abort = exports.ContextAwareConfirmation = exports.createConfirmationContext = exports.createMountPoint = exports.createReactTreeMounter = exports.createDomTreeMounter = exports.createConfirmationCreater = exports.createConfirmation = exports.confirmable = void 0;
 var confirmable_1 = __importDefault(require("./confirmable"));
 exports.confirmable = confirmable_1.default;
 var createConfirmation_1 = __importStar(require("./createConfirmation"));
@@ -50,3 +50,6 @@ Object.defineProperty(exports, "createMountPoint", { enumerable: true, get: func
 var context_1 = require("./context");
 Object.defineProperty(exports, "createConfirmationContext", { enumerable: true, get: function () { return context_1.createConfirmationContext; } });
 Object.defineProperty(exports, "ContextAwareConfirmation", { enumerable: true, get: function () { return context_1.ContextAwareConfirmation; } });
+var controls_1 = require("./controls");
+Object.defineProperty(exports, "abort", { enumerable: true, get: function () { return controls_1.abort; } });
+Object.defineProperty(exports, "abortAll", { enumerable: true, get: function () { return controls_1.abortAll; } });

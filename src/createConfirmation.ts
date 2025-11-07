@@ -1,12 +1,22 @@
 import type React from 'react';
 import { createDomTreeMounter } from './mounter/domTree';
-import type { ConfirmableDialog, Mounter } from './types';
+import type { ConfirmableDialog, Mounter, ConfirmationOptions } from './types';
+import { register, attachAbortSignal } from './controls';
 
 export const createConfirmationCreater = (mounter: Mounter) =>
   <P, R>(Component: ConfirmableDialog<P, R>, unmountDelay: number = 1000, mountingNode?: HTMLElement) => {
-    return (props: P): Promise<R> => {
+    return (props: P, options?: ConfirmationOptions): Promise<R> => {
       let mountId: string;
-      const promise = new Promise<R>((resolve, reject) => {
+      let rejectRef: (reason?: Error) => void = () => {};
+
+      function dispose() {
+        setTimeout(() => {
+          mounter.unmount(mountId);
+        }, unmountDelay);
+      }
+
+      const inner = new Promise<R>((resolve, reject) => {
+        rejectRef = reject;
         try {
           mountId = mounter.mount(Component as React.ComponentType<any>, { reject, resolve, dispose, ...props }, mountingNode);
         } catch (e) {
@@ -16,22 +26,27 @@ export const createConfirmationCreater = (mounter: Mounter) =>
         }
       });
 
-      function dispose() {
-        setTimeout(() => {
-          mounter.unmount(mountId);
-        }, unmountDelay);
-      }
-
-      return promise.then(
+      const wrapped = inner.then(
         (result) => {
           dispose();
           return result;
         },
-        (result) => {
+        (err) => {
           dispose();
-          return Promise.reject(result);
+          return Promise.reject(err);
         }
       );
+
+      // 外部からのキャンセルのためにレジストリに登録
+      register(wrapped, { reject: rejectRef, dispose });
+
+      // AbortSignalが提供されていれば紐付ける
+      if (options?.signal) {
+        const detach = attachAbortSignal(options.signal, wrapped);
+        wrapped.finally(detach).catch(() => {});
+      }
+
+      return wrapped;
     };
   };
 
@@ -40,4 +55,4 @@ export default defaultCreateConfirmation as <P, R>(
   component: ConfirmableDialog<P, R>,
   unmountDelay?: number,
   mountingNode?: HTMLElement
-) => (props: P) => Promise<R>;
+) => (props: P, options?: ConfirmationOptions) => Promise<R>;

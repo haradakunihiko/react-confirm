@@ -34,6 +34,14 @@ export type TreeMounter = {
   };
 } & Mounter;
 
+// Confirmation options
+export interface ConfirmationOptions {
+  /**
+   * AbortSignal to allow external cancellation of the confirmation
+   */
+  signal?: AbortSignal;
+}
+
 // Context-aware confirmation system
 export interface ConfirmationContext {
   /**
@@ -45,7 +53,7 @@ export interface ConfirmationContext {
   createConfirmation: <P, R>(
     component: ConfirmableDialog<P, R>,
     unmountDelay?: number
-  ) => (props: P) => Promise<R>;
+  ) => (props: P, options?: ConfirmationOptions) => Promise<R>;
 
   /**
    * React component that must be rendered in your app to display confirmations

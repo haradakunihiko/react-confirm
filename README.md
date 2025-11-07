@@ -70,6 +70,63 @@ const handleDelete = async (): Promise<void> => {
 <button onClick={handleDelete}>Delete Item</button>
 ```
 
+## Cancellation (Abort)
+
+You can cancel a pending confirmation dialog from outside using one of two approaches:
+
+### Using AbortController (Recommended)
+
+```typescript
+import { confirm } from './confirm';
+
+const handleOperation = async (): Promise<void> => {
+  const abortController = new AbortController();
+
+  // Pass the signal as the second argument
+  const resultPromise = confirm(
+    { message: 'This operation takes time. Continue?' },
+    { signal: abortController.signal }
+  );
+
+  // Later, you can abort from anywhere
+  setTimeout(() => {
+    abortController.abort(); // Dialog closes and promise rejects
+  }, 5000);
+
+  try {
+    const result = await resultPromise;
+    if (result) {
+      // User confirmed
+    }
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      // Dialog was cancelled externally
+      console.log('Dialog was aborted');
+    } else {
+      // Other errors
+      throw error;
+    }
+  }
+};
+```
+
+### Using Utility Functions
+
+```typescript
+import { confirm, abort, abortAll } from './confirm';
+
+const p1 = confirm({ message: 'Delete item 1?' });
+const p2 = confirm({ message: 'Delete item 2?' });
+
+// Cancel a specific confirmation
+abort(p1);
+
+// Cancel all pending confirmations
+abortAll();
+```
+
+**Note**: When a confirmation is aborted, the Promise rejects with an `AbortError` (with `name === 'AbortError'`), and the dialog UI is automatically unmounted.
+
 ## Using with React Context
 
 If your dialog needs to access React Context (themes, authentication, etc.), use the context-aware approach:

@@ -5,9 +5,9 @@ import { register, attachAbortSignal } from './controls';
 
 export const createConfirmationCreater = (mounter: Mounter) =>
   <P, R>(Component: ConfirmableDialog<P, R>, unmountDelay: number = 1000, mountingNode?: HTMLElement) => {
-    return (props: P, options?: ConfirmationOptions): Promise<R> => {
+    return (props: P, options?: ConfirmationOptions<R>): Promise<R> => {
       let mountId: string;
-      let rejectRef: (reason?: Error) => void = () => {};
+      let resolveRef: (value: R) => void = () => {};
 
       function dispose() {
         setTimeout(() => {
@@ -16,7 +16,7 @@ export const createConfirmationCreater = (mounter: Mounter) =>
       }
 
       const inner = new Promise<R>((resolve, reject) => {
-        rejectRef = reject;
+        resolveRef = resolve;
         try {
           mountId = mounter.mount(Component as React.ComponentType<any>, { reject, resolve, dispose, ...props }, mountingNode);
         } catch (e) {
@@ -37,12 +37,12 @@ export const createConfirmationCreater = (mounter: Mounter) =>
         }
       );
 
-      // Register to registry for external cancellation
-      register(wrapped, { reject: rejectRef, dispose });
+      // Register to registry for external close
+      register(wrapped, { resolve: resolveRef, dispose });
 
       // Attach AbortSignal if provided
-      if (options?.signal) {
-        const detach = attachAbortSignal(options.signal, wrapped);
+      if (options?.signal && options.abortResponse !== undefined) {
+        const detach = attachAbortSignal(options.signal, wrapped, options.abortResponse);
         wrapped.finally(detach).catch(() => {});
       }
 
@@ -55,4 +55,4 @@ export default defaultCreateConfirmation as <P, R>(
   component: ConfirmableDialog<P, R>,
   unmountDelay?: number,
   mountingNode?: HTMLElement
-) => (props: P, options?: ConfirmationOptions) => Promise<R>;
+) => (props: P, options?: ConfirmationOptions<R>) => Promise<R>;

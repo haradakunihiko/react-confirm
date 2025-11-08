@@ -1,38 +1,33 @@
 /**
- * Custom error thrown when a confirmation is cancelled
- */
-export declare class AbortError extends Error {
-    constructor(message?: string);
-}
-/**
  * Control handle for a confirmation dialog
  */
-export type ConfirmationHandle = {
-    reject: (reason?: Error) => void;
+export type ConfirmationHandle<R> = {
+    resolve: (value: R) => void;
     dispose: () => void;
     settled?: boolean;
 };
 /**
  * Register a Promise and its handle to the registry
  */
-export declare function register(promise: Promise<unknown>, handle: ConfirmationHandle): void;
+export declare function register<R>(promise: Promise<R>, handle: ConfirmationHandle<R>): void;
 /**
- * Cancel an individual Promise
- * @param promise The Promise to cancel
- * @param reason The cancellation reason (defaults to AbortError)
- * @returns true if cancellation was successful
+ * Close an individual confirmation with a response
+ * @param promise The Promise to close
+ * @param response The response value to resolve with
+ * @returns true if close was successful
  */
-export declare function abort(promise: Promise<unknown>, reason?: Error): boolean;
+export declare function close<R>(promise: Promise<R>, response: R): boolean;
 /**
- * Cancel all pending Promises
- * @param reason The cancellation reason (defaults to AbortError)
- * @returns The number of cancelled Promises
+ * Close all pending confirmations with a response
+ * @param response The response value to resolve all with
+ * @returns The number of closed confirmations
  */
-export declare function abortAll(reason?: Error): number;
+export declare function closeAll<R>(response: R): number;
 /**
  * Attach an AbortSignal to a Promise
  * @param signal The AbortSignal
  * @param promise The Promise to attach to
+ * @param response The response value when signal is aborted
  * @returns A function to detach the signal
  */
-export declare function attachAbortSignal(signal: AbortSignal, promise: Promise<unknown>): () => void;
+export declare function attachAbortSignal<R>(signal: AbortSignal, promise: Promise<R>, response: R): () => void;

@@ -70,23 +70,23 @@ const handleDelete = async (): Promise<void> => {
 <button onClick={handleDelete}>Delete Item</button>
 ```
 
-## Cancellation (Abort)
+## External Completion
 
-You can cancel a pending confirmation dialog from outside.
+You can complete a pending confirmation dialog from outside with a specified response value.
 
 ### Basic Usage
 
 ```typescript
-import { confirm, abort, abortAll } from 'react-confirm';
+import { confirm, close, closeAll } from 'react-confirm';
 
 const p1 = confirm({ message: 'Delete item 1?' });
 const p2 = confirm({ message: 'Delete item 2?' });
 
-// Cancel a specific confirmation
-abort(p1);
+// Close a specific confirmation with a response
+close(p1, false);
 
-// Cancel all pending confirmations
-abortAll();
+// Close all pending confirmations with a response
+closeAll(false);
 ```
 
 ### Advanced: Using AbortController
@@ -99,35 +99,26 @@ import { confirm } from './confirm';
 const handleOperation = async (): Promise<void> => {
   const abortController = new AbortController();
 
-  // Pass the signal as the second argument
-  const resultPromise = confirm(
+  // Pass the signal and abortResponse as the second argument
+  const result = await confirm(
     { message: 'This operation takes time. Continue?' },
-    { signal: abortController.signal }
+    { signal: abortController.signal, abortResponse: false }
   );
 
   // Later, you can abort from anywhere
   setTimeout(() => {
-    abortController.abort(); // Dialog closes and promise rejects
+    abortController.abort(); // Dialog closes and promise resolves with false
   }, 5000);
 
-  try {
-    const result = await resultPromise;
-    if (result) {
-      // User confirmed
-    }
-  } catch (error) {
-    if (error instanceof Error && error.name === 'AbortError') {
-      // Dialog was cancelled externally
-      console.log('Dialog was aborted');
-    } else {
-      // Other errors
-      throw error;
-    }
+  if (result) {
+    // User confirmed
+  } else {
+    // User declined or dialog was closed externally
   }
 };
 ```
 
-**Note**: When a confirmation is aborted, the Promise rejects with an `AbortError` (with `name === 'AbortError'`), and the dialog UI is automatically unmounted.
+**Note**: When a confirmation is closed externally, the Promise resolves with the provided response value, and the dialog UI is automatically unmounted.
 
 ## Using with React Context
 

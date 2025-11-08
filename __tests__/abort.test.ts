@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { confirmable, createConfirmation, abort, abortAll } from 'src';
+import { confirmable, createConfirmation, close, closeAll } from 'src';
 
-describe('Cancellation (abort) behavior', () => {
-  // Dialog that doesn't auto-resolve (waits until manually aborted)
+describe('Close (external completion) behavior', () => {
+  // Dialog that doesn't auto-resolve (waits until manually closed)
   const HangingDialog = ({ show }: any) => (show ? React.createElement('div', { 'data-testid': 'hanging' }) : null);
   const ConfirmableHanging = confirmable(HangingDialog);
 
-  it('abort(promise) rejects with AbortError and unmounts', async () => {
+  it('close(promise, response) resolves with response value', async () => {
     const confirm = createConfirmation(ConfirmableHanging);
     const p = confirm({});
 
@@ -17,49 +17,49 @@ describe('Cancellation (abort) behavior', () => {
     ]);
     expect(res).toBe('tick');
 
-    // Execute abort
-    abort(p);
+    // Close with response value
+    close(p, false);
 
-    // Verify it rejects with AbortError
-    await expect(p).rejects.toMatchObject({ name: 'AbortError' });
+    // Verify it resolves with the provided value
+    await expect(p).resolves.toBe(false);
   });
 
-  it('abortAll() rejects all pending promises', async () => {
+  it('closeAll() resolves all pending promises with response value', async () => {
     const confirm = createConfirmation(ConfirmableHanging);
     const p1 = confirm({});
     const p2 = confirm({});
 
-    // Abort all
-    abortAll();
+    // Close all with false
+    closeAll(false);
 
     const [r1, r2] = await Promise.allSettled([p1, p2]);
-    expect(r1.status).toBe('rejected');
-    expect(r2.status).toBe('rejected');
-    expect(r1).toMatchObject({ reason: expect.objectContaining({ name: 'AbortError' }) });
-    expect(r2).toMatchObject({ reason: expect.objectContaining({ name: 'AbortError' }) });
+    expect(r1.status).toBe('fulfilled');
+    expect(r2.status).toBe('fulfilled');
+    expect(r1).toMatchObject({ value: false });
+    expect(r2).toMatchObject({ value: false });
   });
 
-  it('supports AbortSignal via options param', async () => {
+  it('supports AbortSignal via options param with abortResponse', async () => {
     const confirm = createConfirmation(ConfirmableHanging);
     const ac = new AbortController();
-    const p = confirm({}, { signal: ac.signal });
+    const p = confirm({}, { signal: ac.signal, abortResponse: false });
 
     ac.abort();
 
-    await expect(p).rejects.toMatchObject({ name: 'AbortError' });
+    await expect(p).resolves.toBe(false);
   });
 
-  it('abort returns false for already settled promise', async () => {
+  it('close returns false for already settled promise', async () => {
     const confirm = createConfirmation(ConfirmableHanging);
     const p = confirm({});
 
-    // Abort first
-    const result = abort(p);
+    // Close first
+    const result = close(p, false);
     expect(result).toBe(true);
 
-    // Try to abort again after settlement
-    await p.catch(() => {});
-    const result2 = abort(p);
+    // Try to close again after settlement
+    await p;
+    const result2 = close(p, false);
     expect(result2).toBe(false);
   });
 
@@ -68,24 +68,24 @@ describe('Cancellation (abort) behavior', () => {
     const ac = new AbortController();
     ac.abort();
 
-    const p = confirm({}, { signal: ac.signal });
+    const p = confirm({}, { signal: ac.signal, abortResponse: false });
 
-    // Should reject immediately since signal is already aborted
-    await expect(p).rejects.toMatchObject({ name: 'AbortError' });
+    // Should resolve immediately since signal is already aborted
+    await expect(p).resolves.toBe(false);
   });
 
-  it('multiple dialogs can be aborted independently', async () => {
+  it('multiple dialogs can be closed independently', async () => {
     const confirm = createConfirmation(ConfirmableHanging);
     const p1 = confirm({});
     const p2 = confirm({});
     const p3 = confirm({});
 
-    // Abort only p2
-    abort(p2);
+    // Close only p2
+    close(p2, false);
 
-    // p2 is aborted but p1 and p3 are still pending
-    const r2 = await p2.catch((e) => e);
-    expect(r2).toMatchObject({ name: 'AbortError' });
+    // p2 is closed but p1 and p3 are still pending
+    const r2 = await p2;
+    expect(r2).toBe(false);
 
     // Verify p1 and p3 are still pending
     const res1 = await Promise.race([
@@ -95,17 +95,21 @@ describe('Cancellation (abort) behavior', () => {
     expect(res1).toBe('pending');
 
     // Cleanup p1 and p3
-    abort(p1);
-    abort(p3);
+    close(p1, false);
+    close(p3, false);
   });
 
-  it('custom abort reason is propagated', async () => {
-    const confirm = createConfirmation(ConfirmableHanging);
+  it('response value is type-safe', async () => {
+    type CustomResponse = 'yes' | 'no' | 'cancel';
+    const CustomDialog = ({ show }: any) => (show ? React.createElement('div') : null);
+    const ConfirmableCustom = confirmable<{}, CustomResponse>(CustomDialog);
+    const confirm = createConfirmation(ConfirmableCustom);
+
     const p = confirm({});
 
-    const customError = new Error('Custom abort reason');
-    abort(p, customError);
+    // TypeScript should ensure response matches the Promise type
+    close(p, 'cancel');
 
-    await expect(p).rejects.toBe(customError);
+    await expect(p).resolves.toBe('cancel');
   });
 });

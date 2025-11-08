@@ -19,14 +19,14 @@ var createConfirmationCreater = function (mounter) {
         if (unmountDelay === void 0) { unmountDelay = 1000; }
         return function (props, options) {
             var mountId;
-            var rejectRef = function () { };
+            var resolveRef = function () { };
             function dispose() {
                 setTimeout(function () {
                     mounter.unmount(mountId);
                 }, unmountDelay);
             }
             var inner = new Promise(function (resolve, reject) {
-                rejectRef = reject;
+                resolveRef = resolve;
                 try {
                     mountId = mounter.mount(Component, __assign({ reject: reject, resolve: resolve, dispose: dispose }, props), mountingNode);
                 }
@@ -43,11 +43,11 @@ var createConfirmationCreater = function (mounter) {
                 dispose();
                 return Promise.reject(err);
             });
-            // Register to registry for external cancellation
-            (0, controls_1.register)(wrapped, { reject: rejectRef, dispose: dispose });
+            // Register to registry for external close
+            (0, controls_1.register)(wrapped, { resolve: resolveRef, dispose: dispose });
             // Attach AbortSignal if provided
-            if (options === null || options === void 0 ? void 0 : options.signal) {
-                var detach = (0, controls_1.attachAbortSignal)(options.signal, wrapped);
+            if ((options === null || options === void 0 ? void 0 : options.signal) && options.abortResponse !== undefined) {
+                var detach = (0, controls_1.attachAbortSignal)(options.signal, wrapped, options.abortResponse);
                 wrapped.finally(detach).catch(function () { });
             }
             return wrapped;

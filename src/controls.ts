@@ -1,50 +1,25 @@
 // Lightweight registry to control pending confirmations from outside
-// Stores only control handles (reject/dispose), not UI state
-
-/**
- * Custom error thrown when a confirmation is cancelled
- */
-export class AbortError extends Error {
-  constructor(message: string = 'Aborted') {
-    super(message);
-    this.name = 'AbortError';
-  }
-}
+// Stores only control handles (resolve/dispose), not UI state
 
 /**
  * Control handle for a confirmation dialog
  */
-export type ConfirmationHandle = {
-  reject: (reason?: Error) => void;
+export type ConfirmationHandle<R> = {
+  resolve: (value: R) => void;
   dispose: () => void;
   settled?: boolean;
 };
 
-const active = new Map<Promise<unknown>, ConfirmationHandle>();
-
-/**
- * Create an AbortError (or use provided reason if available)
- */
-function createAbortError(reason?: Error): Error {
-  if (reason !== undefined) return reason;
-
-  // Use DOMException if available (standard AbortError)
-  if (typeof DOMException !== 'undefined') {
-    try {
-      return new DOMException('Aborted', 'AbortError');
-    } catch {
-      // Fallback
-    }
-  }
-
-  return new AbortError();
-}
+const active = new Map<Promise<unknown>, ConfirmationHandle<unknown>>();
 
 /**
  * Register a Promise and its handle to the registry
  */
-export function register(promise: Promise<unknown>, handle: ConfirmationHandle): void {
-  active.set(promise, handle);
+export function register<R>(
+  promise: Promise<R>,
+  handle: ConfirmationHandle<R>
+): void {
+  active.set(promise, handle as ConfirmationHandle<unknown>);
 
   // Auto cleanup after settlement
   promise
@@ -59,17 +34,17 @@ export function register(promise: Promise<unknown>, handle: ConfirmationHandle):
 }
 
 /**
- * Cancel an individual Promise
- * @param promise The Promise to cancel
- * @param reason The cancellation reason (defaults to AbortError)
- * @returns true if cancellation was successful
+ * Close an individual confirmation with a response
+ * @param promise The Promise to close
+ * @param response The response value to resolve with
+ * @returns true if close was successful
  */
-export function abort(promise: Promise<unknown>, reason?: Error): boolean {
-  const handle = active.get(promise);
+export function close<R>(promise: Promise<R>, response: R): boolean {
+  const handle = active.get(promise) as ConfirmationHandle<R> | undefined;
   if (!handle || handle.settled) return false;
 
   try {
-    handle.reject(createAbortError(reason));
+    handle.resolve(response);
   } finally {
     try {
       handle.dispose();
@@ -83,11 +58,11 @@ export function abort(promise: Promise<unknown>, reason?: Error): boolean {
 }
 
 /**
- * Cancel all pending Promises
- * @param reason The cancellation reason (defaults to AbortError)
- * @returns The number of cancelled Promises
+ * Close all pending confirmations with a response
+ * @param response The response value to resolve all with
+ * @returns The number of closed confirmations
  */
-export function abortAll(reason?: Error): number {
+export function closeAll<R>(response: R): number {
   const items = Array.from(active.entries());
   let count = 0;
 
@@ -98,7 +73,7 @@ export function abortAll(reason?: Error): number {
     }
 
     try {
-      h.reject(createAbortError(reason));
+      (h as ConfirmationHandle<R>).resolve(response);
     } finally {
       try {
         h.dispose();
@@ -117,11 +92,16 @@ export function abortAll(reason?: Error): number {
  * Attach an AbortSignal to a Promise
  * @param signal The AbortSignal
  * @param promise The Promise to attach to
+ * @param response The response value when signal is aborted
  * @returns A function to detach the signal
  */
-export function attachAbortSignal(signal: AbortSignal, promise: Promise<unknown>): () => void {
+export function attachAbortSignal<R>(
+  signal: AbortSignal,
+  promise: Promise<R>,
+  response: R
+): () => void {
   const onAbort = () => {
-    abort(promise, signal.reason);
+    close(promise, response);
   };
 
   // Execute immediately if already aborted

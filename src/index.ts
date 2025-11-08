@@ -6,7 +6,7 @@ import {
   createConfirmationContext,
   ContextAwareConfirmation
 } from './context';
-import { abort as abortConfirmation, abortAll as abortAllConfirmations } from './controls';
+import { close as closeConfirmation, closeAll as closeAllConfirmations } from './controls';
 
 export type {
   ConfirmDialogProps,
@@ -27,6 +27,6 @@ export {
   createMountPoint,
   createConfirmationContext,
   ContextAwareConfirmation,
-  abortConfirmation as abort,
-  abortAllConfirmations as abortAll,
+  closeConfirmation as close,
+  closeAllConfirmations as closeAll,
 };

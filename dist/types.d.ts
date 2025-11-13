@@ -32,7 +32,8 @@ export interface ConfirmationOptions<R> {
      */
     signal?: AbortSignal;
     /**
-     * Response value when signal is aborted
+     * Response value when signal is aborted.
+     * If not provided, the promise will be rejected with the AbortSignal's reason.
      */
     abortResponse?: R;
 }

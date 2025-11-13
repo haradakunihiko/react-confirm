@@ -25,8 +25,10 @@ var createConfirmationCreater = function (mounter) {
                     mounter.unmount(mountId);
                 }, unmountDelay);
             }
+            var rejectRef = function () { };
             var inner = new Promise(function (resolve, reject) {
                 resolveRef = resolve;
+                rejectRef = reject;
                 try {
                     mountId = mounter.mount(Component, __assign({ reject: reject, resolve: resolve, dispose: dispose }, props), mountingNode);
                 }
@@ -44,9 +46,9 @@ var createConfirmationCreater = function (mounter) {
                 return Promise.reject(err);
             });
             // Register to registry for external close
-            (0, controls_1.register)(wrapped, { resolve: resolveRef, dispose: dispose });
+            (0, controls_1.register)(wrapped, { resolve: resolveRef, reject: rejectRef, dispose: dispose });
             // Attach AbortSignal if provided
-            if ((options === null || options === void 0 ? void 0 : options.signal) && options.abortResponse !== undefined) {
+            if (options === null || options === void 0 ? void 0 : options.signal) {
                 var detach = (0, controls_1.attachAbortSignal)(options.signal, wrapped, options.abortResponse);
                 wrapped.finally(detach).catch(function () { });
             }

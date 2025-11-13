@@ -70,11 +70,13 @@ const handleDelete = async (): Promise<void> => {
 <button onClick={handleDelete}>Delete Item</button>
 ```
 
-## External Completion
+## External Control
 
-You can complete a pending confirmation dialog from outside with a specified response value.
+You can close pending confirmation dialogs from outside, which is useful for scenarios like navigation, timeouts, or global state changes.
 
-### Basic Usage
+### Basic Usage (Recommended)
+
+Use `close()` to close individual confirmations or `closeAll()` to close all pending confirmations:
 
 ```typescript
 import { confirm, close, closeAll } from 'react-confirm';
@@ -82,43 +84,81 @@ import { confirm, close, closeAll } from 'react-confirm';
 const p1 = confirm({ message: 'Delete item 1?' });
 const p2 = confirm({ message: 'Delete item 2?' });
 
-// Close a specific confirmation with a response
-close(p1, false);
+// Close a specific confirmation with a response value
+close(p1, false); // Promise resolves with `false`
 
-// Close all pending confirmations with a response
-closeAll(false);
+// Close all pending confirmations with a response value
+closeAll(false); // All promises resolve with `false`
 ```
 
-### Advanced: Using AbortController
+### Use Cases
 
-For more fine-grained control, you can use the standard `AbortController` pattern:
+**Navigation cleanup:**
+```typescript
+// React Router example
+useEffect(() => {
+  return () => {
+    // Close all confirmations when navigating away
+    closeAll(false);
+  };
+}, [location]);
+```
+
+**Timeout handling:**
+```typescript
+const p = confirm({ message: 'Continue?' });
+
+setTimeout(() => {
+  close(p, false); // Auto-close after 10 seconds
+}, 10000);
+
+const result = await p;
+```
+
+### Alternative: AbortController Integration
+
+For integration with existing abort patterns, you can use the standard `AbortController`:
 
 ```typescript
 import { confirm } from './confirm';
 
 const handleOperation = async (): Promise<void> => {
-  const abortController = new AbortController();
+  const controller = new AbortController();
 
-  // Pass the signal and abortResponse as the second argument
-  const result = await confirm(
-    { message: 'This operation takes time. Continue?' },
-    { signal: abortController.signal, abortResponse: false }
+  // With explicit response value (resolves)
+  const p1 = confirm(
+    { message: 'Continue?' },
+    { signal: controller.signal, abortResponse: false }
   );
 
-  // Later, you can abort from anywhere
-  setTimeout(() => {
-    abortController.abort(); // Dialog closes and promise resolves with false
-  }, 5000);
+  // Without response value (rejects with abort reason)
+  const p2 = confirm(
+    { message: 'Continue?' },
+    { signal: controller.signal }
+  );
 
-  if (result) {
-    // User confirmed
-  } else {
-    // User declined or dialog was closed externally
+  // Later, abort from anywhere
+  controller.abort();
+
+  try {
+    await p1; // Resolves with `false`
+  } catch (error) {
+    // Won't reach here
+  }
+
+  try {
+    await p2;
+  } catch (error) {
+    // Rejects with abort reason
+    console.log('Dialog was aborted');
   }
 };
 ```
 
-**Note**: When a confirmation is closed externally, the Promise resolves with the provided response value, and the dialog UI is automatically unmounted.
+**Note**:
+- With `abortResponse`: Promise resolves with the specified value
+- Without `abortResponse`: Promise rejects with the abort reason
+- The dialog UI is automatically unmounted in both cases
 
 ## Using with React Context
 

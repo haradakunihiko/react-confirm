@@ -15,8 +15,11 @@ export const createConfirmationCreater = (mounter: Mounter) =>
         }, unmountDelay);
       }
 
+      let rejectRef: (reason?: any) => void = () => {};
+
       const inner = new Promise<R>((resolve, reject) => {
         resolveRef = resolve;
+        rejectRef = reject;
         try {
           mountId = mounter.mount(Component as React.ComponentType<any>, { reject, resolve, dispose, ...props }, mountingNode);
         } catch (e) {
@@ -38,10 +41,10 @@ export const createConfirmationCreater = (mounter: Mounter) =>
       );
 
       // Register to registry for external close
-      register(wrapped, { resolve: resolveRef, dispose });
+      register(wrapped, { resolve: resolveRef, reject: rejectRef, dispose });
 
       // Attach AbortSignal if provided
-      if (options?.signal && options.abortResponse !== undefined) {
+      if (options?.signal) {
         const detach = attachAbortSignal(options.signal, wrapped, options.abortResponse);
         wrapped.finally(detach).catch(() => {});
       }

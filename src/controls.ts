@@ -6,6 +6,7 @@
  */
 export type ConfirmationHandle<R> = {
   resolve: (value: R) => void;
+  reject: (reason?: any) => void;
   dispose: () => void;
   settled?: boolean;
 };
@@ -92,16 +93,37 @@ export function closeAll<R>(response: R): number {
  * Attach an AbortSignal to a Promise
  * @param signal The AbortSignal
  * @param promise The Promise to attach to
- * @param response The response value when signal is aborted
+ * @param response Optional response value when signal is aborted. If not provided, promise will be rejected.
  * @returns A function to detach the signal
  */
 export function attachAbortSignal<R>(
   signal: AbortSignal,
   promise: Promise<R>,
-  response: R
+  response?: R
 ): () => void {
+  const handle = active.get(promise) as ConfirmationHandle<R> | undefined;
+  if (!handle || handle.settled) return () => {};
+
   const onAbort = () => {
-    close(promise, response);
+    if (handle.settled) return;
+
+    try {
+      if (response !== undefined) {
+        // Resolve with response value
+        handle.resolve(response);
+      } else {
+        // Reject with AbortSignal's reason
+        const reason = signal.reason ?? new Error('Aborted');
+        handle.reject(reason);
+      }
+    } finally {
+      try {
+        handle.dispose();
+      } catch {
+        // Ignore
+      }
+      active.delete(promise);
+    }
   };
 
   // Execute immediately if already aborted

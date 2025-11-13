@@ -3,6 +3,7 @@
  */
 export type ConfirmationHandle<R> = {
     resolve: (value: R) => void;
+    reject: (reason?: any) => void;
     dispose: () => void;
     settled?: boolean;
 };
@@ -27,7 +28,7 @@ export declare function closeAll<R>(response: R): number;
  * Attach an AbortSignal to a Promise
  * @param signal The AbortSignal
  * @param promise The Promise to attach to
- * @param response The response value when signal is aborted
+ * @param response Optional response value when signal is aborted. If not provided, promise will be rejected.
  * @returns A function to detach the signal
  */
-export declare function attachAbortSignal<R>(signal: AbortSignal, promise: Promise<R>, response: R): () => void;
+export declare function attachAbortSignal<R>(signal: AbortSignal, promise: Promise<R>, response?: R): () => void;

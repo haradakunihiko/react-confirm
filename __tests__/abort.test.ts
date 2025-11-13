@@ -49,6 +49,26 @@ describe('Close (external completion) behavior', () => {
     await expect(p).resolves.toBe(false);
   });
 
+  it('supports AbortSignal without abortResponse (rejects with default reason)', async () => {
+    const confirm = createConfirmation(ConfirmableHanging);
+    const ac = new AbortController();
+    const p = confirm({}, { signal: ac.signal });
+
+    ac.abort();
+
+    await expect(p).rejects.toThrow();
+  });
+
+  it('supports AbortSignal with custom abort reason', async () => {
+    const confirm = createConfirmation(ConfirmableHanging);
+    const ac = new AbortController();
+    const p = confirm({}, { signal: ac.signal });
+
+    ac.abort(new Error('Custom abort reason'));
+
+    await expect(p).rejects.toThrow('Custom abort reason');
+  });
+
   it('close returns false for already settled promise', async () => {
     const confirm = createConfirmation(ConfirmableHanging);
     const p = confirm({});

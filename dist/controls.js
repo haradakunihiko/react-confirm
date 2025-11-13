@@ -82,12 +82,37 @@ function closeAll(response) {
  * Attach an AbortSignal to a Promise
  * @param signal The AbortSignal
  * @param promise The Promise to attach to
- * @param response The response value when signal is aborted
+ * @param response Optional response value when signal is aborted. If not provided, promise will be rejected.
  * @returns A function to detach the signal
  */
 function attachAbortSignal(signal, promise, response) {
+    var handle = active.get(promise);
+    if (!handle || handle.settled)
+        return function () { };
     var onAbort = function () {
-        close(promise, response);
+        var _a;
+        if (handle.settled)
+            return;
+        try {
+            if (response !== undefined) {
+                // Resolve with response value
+                handle.resolve(response);
+            }
+            else {
+                // Reject with AbortSignal's reason
+                var reason = (_a = signal.reason) !== null && _a !== void 0 ? _a : new Error('Aborted');
+                handle.reject(reason);
+            }
+        }
+        finally {
+            try {
+                handle.dispose();
+            }
+            catch (_b) {
+                // Ignore
+            }
+            active.delete(promise);
+        }
     };
     // Execute immediately if already aborted
     if (signal.aborted) {

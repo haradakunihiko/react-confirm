@@ -72,57 +72,19 @@ const handleDelete = async (): Promise<void> => {
 
 ## External Control
 
-You can control pending confirmation dialogs from outside using `proceed`, `dismiss`, and `cancel` functions. This is useful for scenarios like navigation, timeouts, or global state changes.
-
-### API
+You can close pending confirmation dialogs from outside using the `proceed` function. This is useful for scenarios like timeouts or cleanup.
 
 ```typescript
-import { proceed, dismiss, cancel } from 'react-confirm';
+import { proceed } from 'react-confirm';
 
-const p = confirm({ message: 'Delete item?' });
-
-// Resolve the Promise with a value and close the dialog
-proceed(p, false); // Promise resolves with `false`
-
-// Close the dialog without resolving or rejecting (Promise stays pending)
-dismiss(p);
-
-// Reject the Promise and close the dialog
-cancel(p, new Error('Operation cancelled'));
-```
-
-### Use Cases
-
-**Timeout handling:**
-```typescript
 const p = confirm({ message: 'Continue?' });
 
+// Auto-close after 10 seconds
 setTimeout(() => {
-  proceed(p, false); // Auto-close after 10 seconds
+  proceed(p, false);
 }, 10000);
 
 const result = await p;
-```
-
-**Cancel on navigation:**
-```typescript
-// React Router example
-const pendingConfirm = useRef<Promise<boolean> | null>(null);
-
-const handleAction = async () => {
-  pendingConfirm.current = confirm({ message: 'Proceed?' });
-  const result = await pendingConfirm.current;
-  pendingConfirm.current = null;
-  // ...
-};
-
-useEffect(() => {
-  return () => {
-    if (pendingConfirm.current) {
-      dismiss(pendingConfirm.current);
-    }
-  };
-}, [location]);
 ```
 
 ## Using with React Context

@@ -72,7 +72,7 @@ const handleDelete = async (): Promise<void> => {
 
 ## External Control
 
-You can close pending confirmation dialogs from outside using the `proceed` function. This is useful for scenarios like timeouts or cleanup.
+You can close pending confirmation dialogs from outside using the `proceed` function. This is useful when you need to close a dialog from a different part of your application.
 
 ```typescript
 import { proceed } from 'react-confirm';

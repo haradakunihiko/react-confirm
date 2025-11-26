@@ -17,7 +17,7 @@ var controls_1 = require("./controls");
 var createConfirmationCreater = function (mounter) {
     return function (Component, unmountDelay, mountingNode) {
         if (unmountDelay === void 0) { unmountDelay = 1000; }
-        return function (props, options) {
+        return function (props) {
             var mountId;
             var resolveRef = function () { };
             function dispose() {
@@ -45,13 +45,8 @@ var createConfirmationCreater = function (mounter) {
                 dispose();
                 return Promise.reject(err);
             });
-            // Register to registry for external close
+            // Register to controls layer for external control
             (0, controls_1.register)(wrapped, { resolve: resolveRef, reject: rejectRef, dispose: dispose });
-            // Attach AbortSignal if provided
-            if (options === null || options === void 0 ? void 0 : options.signal) {
-                var detach = (0, controls_1.attachAbortSignal)(options.signal, wrapped, options.abortResponse);
-                wrapped.finally(detach).catch(function () { });
-            }
             return wrapped;
         };
     };

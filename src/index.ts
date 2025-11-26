@@ -6,7 +6,7 @@ import {
   createConfirmationContext,
   ContextAwareConfirmation
 } from './context';
-import { close as closeConfirmation, closeAll as closeAllConfirmations } from './controls';
+import { proceed, dismiss, cancel } from './controls';
 
 export type {
   ConfirmDialogProps,
@@ -15,7 +15,6 @@ export type {
   Mounter,
   TreeMounter,
   ConfirmationContext,
-  ConfirmationOptions,
 } from './types';
 
 export {
@@ -27,6 +26,7 @@ export {
   createMountPoint,
   createConfirmationContext,
   ContextAwareConfirmation,
-  closeConfirmation as close,
-  closeAllConfirmations as closeAll,
+  proceed,
+  dismiss,
+  cancel,
 };

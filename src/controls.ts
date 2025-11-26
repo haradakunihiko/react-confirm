@@ -1,5 +1,5 @@
 // Lightweight registry to control pending confirmations from outside
-// Stores only control handles (resolve/dispose), not UI state
+// Stores only control handles (resolve/reject/dispose), not UI state
 
 /**
  * Control handle for a confirmation dialog
@@ -35,12 +35,12 @@ export function register<R>(
 }
 
 /**
- * Close an individual confirmation with a response
- * @param promise The Promise to close
+ * Resolve a confirmation dialog and close it
+ * @param promise The Promise to resolve
  * @param response The response value to resolve with
- * @returns true if close was successful
+ * @returns true if successful
  */
-export function close<R>(promise: Promise<R>, response: R): boolean {
+export function proceed<R>(promise: Promise<R>, response: R): boolean {
   const handle = active.get(promise) as ConfirmationHandle<R> | undefined;
   if (!handle || handle.settled) return false;
 
@@ -59,79 +59,45 @@ export function close<R>(promise: Promise<R>, response: R): boolean {
 }
 
 /**
- * Close all pending confirmations with a response
- * @param response The response value to resolve all with
- * @returns The number of closed confirmations
+ * Close a confirmation dialog without resolving or rejecting the Promise
+ * The Promise remains pending
+ * @param promise The Promise to dismiss
+ * @returns true if successful
  */
-export function closeAll<R>(response: R): number {
-  const items = Array.from(active.entries());
-  let count = 0;
+export function dismiss<R>(promise: Promise<R>): boolean {
+  const handle = active.get(promise) as ConfirmationHandle<R> | undefined;
+  if (!handle || handle.settled) return false;
 
-  for (const [p, h] of items) {
-    if (h.settled) {
-      active.delete(p);
-      continue;
-    }
-
-    try {
-      (h as ConfirmationHandle<R>).resolve(response);
-    } finally {
-      try {
-        h.dispose();
-      } catch {
-        // Ignore
-      }
-      active.delete(p);
-      count++;
-    }
+  try {
+    handle.dispose();
+  } catch {
+    // Ignore
   }
+  active.delete(promise);
 
-  return count;
+  return true;
 }
 
 /**
- * Attach an AbortSignal to a Promise
- * @param signal The AbortSignal
- * @param promise The Promise to attach to
- * @param response Optional response value when signal is aborted. If not provided, promise will be rejected.
- * @returns A function to detach the signal
+ * Reject a confirmation dialog and close it
+ * @param promise The Promise to reject
+ * @param reason The rejection reason
+ * @returns true if successful
  */
-export function attachAbortSignal<R>(
-  signal: AbortSignal,
-  promise: Promise<R>,
-  response?: R
-): () => void {
+export function cancel<R>(promise: Promise<R>, reason?: unknown): boolean {
   const handle = active.get(promise) as ConfirmationHandle<R> | undefined;
-  if (!handle || handle.settled) return () => {};
+  if (!handle || handle.settled) return false;
 
-  const onAbort = () => {
-    if (handle.settled) return;
-
+  try {
+    handle.reject(reason);
+  } finally {
     try {
-      if (response !== undefined) {
-        // Resolve with response value
-        handle.resolve(response);
-      } else {
-        // Reject with AbortSignal's reason
-        const reason = signal.reason ?? new Error('Aborted');
-        handle.reject(reason);
-      }
-    } finally {
-      try {
-        handle.dispose();
-      } catch {
-        // Ignore
-      }
-      active.delete(promise);
+      handle.dispose();
+    } catch {
+      // Ignore
     }
-  };
-
-  // Execute immediately if already aborted
-  if (signal.aborted) {
-    onAbort();
-    return () => {};
+    active.delete(promise);
   }
 
-  signal.addEventListener('abort', onAbort, { once: true });
-  return () => signal.removeEventListener('abort', onAbort);
+  return true;
 }

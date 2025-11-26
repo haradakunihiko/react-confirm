@@ -12,23 +12,23 @@ export type ConfirmationHandle<R> = {
  */
 export declare function register<R>(promise: Promise<R>, handle: ConfirmationHandle<R>): void;
 /**
- * Close an individual confirmation with a response
- * @param promise The Promise to close
+ * Resolve a confirmation dialog and close it
+ * @param promise The Promise to resolve
  * @param response The response value to resolve with
- * @returns true if close was successful
+ * @returns true if successful
  */
-export declare function close<R>(promise: Promise<R>, response: R): boolean;
+export declare function proceed<R>(promise: Promise<R>, response: R): boolean;
 /**
- * Close all pending confirmations with a response
- * @param response The response value to resolve all with
- * @returns The number of closed confirmations
+ * Close a confirmation dialog without resolving or rejecting the Promise
+ * The Promise remains pending
+ * @param promise The Promise to dismiss
+ * @returns true if successful
  */
-export declare function closeAll<R>(response: R): number;
+export declare function dismiss<R>(promise: Promise<R>): boolean;
 /**
- * Attach an AbortSignal to a Promise
- * @param signal The AbortSignal
- * @param promise The Promise to attach to
- * @param response Optional response value when signal is aborted. If not provided, promise will be rejected.
- * @returns A function to detach the signal
+ * Reject a confirmation dialog and close it
+ * @param promise The Promise to reject
+ * @param reason The rejection reason
+ * @returns true if successful
  */
-export declare function attachAbortSignal<R>(signal: AbortSignal, promise: Promise<R>, response?: R): () => void;
+export declare function cancel<R>(promise: Promise<R>, reason?: unknown): boolean;

@@ -1,11 +1,11 @@
 import type React from 'react';
 import { createDomTreeMounter } from './mounter/domTree';
-import type { ConfirmableDialog, Mounter, ConfirmationOptions } from './types';
-import { register, attachAbortSignal } from './controls';
+import type { ConfirmableDialog, Mounter } from './types';
+import { register } from './controls';
 
 export const createConfirmationCreater = (mounter: Mounter) =>
   <P, R>(Component: ConfirmableDialog<P, R>, unmountDelay: number = 1000, mountingNode?: HTMLElement) => {
-    return (props: P, options?: ConfirmationOptions<R>): Promise<R> => {
+    return (props: P): Promise<R> => {
       let mountId: string;
       let resolveRef: (value: R) => void = () => {};
 
@@ -40,14 +40,8 @@ export const createConfirmationCreater = (mounter: Mounter) =>
         }
       );
 
-      // Register to registry for external close
+      // Register to controls layer for external control
       register(wrapped, { resolve: resolveRef, reject: rejectRef, dispose });
-
-      // Attach AbortSignal if provided
-      if (options?.signal) {
-        const detach = attachAbortSignal(options.signal, wrapped, options.abortResponse);
-        wrapped.finally(detach).catch(() => {});
-      }
 
       return wrapped;
     };
@@ -58,4 +52,4 @@ export default defaultCreateConfirmation as <P, R>(
   component: ConfirmableDialog<P, R>,
   unmountDelay?: number,
   mountingNode?: HTMLElement
-) => (props: P, options?: ConfirmationOptions<R>) => Promise<R>;
+) => (props: P) => Promise<R>;

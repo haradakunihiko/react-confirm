@@ -26,17 +26,6 @@ export type TreeMounter = {
         mountNode?: Element | DocumentFragment | HTMLElement;
     };
 } & Mounter;
-export interface ConfirmationOptions<R> {
-    /**
-     * AbortSignal to allow external cancellation of the confirmation
-     */
-    signal?: AbortSignal;
-    /**
-     * Response value when signal is aborted.
-     * If not provided, the promise will be rejected with the AbortSignal's reason.
-     */
-    abortResponse?: R;
-}
 export interface ConfirmationContext {
     /**
      * Creates a confirmation function for a given component
@@ -44,7 +33,7 @@ export interface ConfirmationContext {
      * @param unmountDelay - Delay before unmounting the component (default: 1000ms)
      * @returns Confirmation function that returns a Promise
      */
-    createConfirmation: <P, R>(component: ConfirmableDialog<P, R>, unmountDelay?: number) => (props: P, options?: ConfirmationOptions<R>) => Promise<R>;
+    createConfirmation: <P, R>(component: ConfirmableDialog<P, R>, unmountDelay?: number) => (props: P) => Promise<R>;
     /**
      * React component that must be rendered in your app to display confirmations
      * Place this component at the root level of your app or where you want confirmations to appear

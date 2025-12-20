@@ -47,6 +47,15 @@ jobs:
           echo "name=$PACKAGE_NAME" >> $GITHUB_OUTPUT
           echo "version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
 
+          # Check if prerelease version (contains hyphen, e.g., 0.5.0-2, 1.0.0-beta.1)
+          if [[ "$PACKAGE_VERSION" == *-* ]]; then
+            echo "tag=next" >> $GITHUB_OUTPUT
+            echo "Detected prerelease version, using tag: next"
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+            echo "Detected stable version, using tag: latest"
+          fi
+
       - name: Check if version exists on npm
         run: |
           if npm view "${{ steps.package_info.outputs.name }}@${{ steps.package_info.outputs.version }}" version 2>/dev/null; then
@@ -57,4 +66,4 @@ jobs:
           fi
 
       - name: Publish to npm
-        run: npm publish --access public
+        run: npm publish --access public --tag ${{ steps.package_info.outputs.tag }}

@@ -34,6 +34,7 @@ export type TreeMounter = {
   };
 } & Mounter;
 
+
 // Context-aware confirmation system
 export interface ConfirmationContext {
   /**

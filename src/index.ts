@@ -2,10 +2,11 @@ import confirmable from './confirmable';
 import createConfirmation, { createConfirmationCreater } from './createConfirmation';
 import { createDomTreeMounter } from './mounter/domTree';
 import { createReactTreeMounter, createMountPoint } from './mounter/reactTree';
-import { 
-  createConfirmationContext, 
+import {
+  createConfirmationContext,
   ContextAwareConfirmation
 } from './context';
+import { proceed, dismiss, cancel } from './controls';
 
 export type {
   ConfirmDialogProps,
@@ -16,13 +17,16 @@ export type {
   ConfirmationContext,
 } from './types';
 
-export { 
-  confirmable, 
-  createConfirmation, 
-  createConfirmationCreater, 
-  createDomTreeMounter, 
-  createReactTreeMounter, 
+export {
+  confirmable,
+  createConfirmation,
+  createConfirmationCreater,
+  createDomTreeMounter,
+  createReactTreeMounter,
   createMountPoint,
   createConfirmationContext,
-  ContextAwareConfirmation
+  ContextAwareConfirmation,
+  proceed,
+  dismiss,
+  cancel,
 };

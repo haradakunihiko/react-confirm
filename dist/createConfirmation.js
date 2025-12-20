@@ -13,12 +13,22 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createConfirmationCreater = void 0;
 var domTree_1 = require("./mounter/domTree");
+var controls_1 = require("./controls");
 var createConfirmationCreater = function (mounter) {
     return function (Component, unmountDelay, mountingNode) {
         if (unmountDelay === void 0) { unmountDelay = 1000; }
         return function (props) {
             var mountId;
-            var promise = new Promise(function (resolve, reject) {
+            var resolveRef = function () { };
+            function dispose() {
+                setTimeout(function () {
+                    mounter.unmount(mountId);
+                }, unmountDelay);
+            }
+            var rejectRef = function () { };
+            var inner = new Promise(function (resolve, reject) {
+                resolveRef = resolve;
+                rejectRef = reject;
                 try {
                     mountId = mounter.mount(Component, __assign({ reject: reject, resolve: resolve, dispose: dispose }, props), mountingNode);
                 }
@@ -28,18 +38,16 @@ var createConfirmationCreater = function (mounter) {
                     throw e;
                 }
             });
-            function dispose() {
-                setTimeout(function () {
-                    mounter.unmount(mountId);
-                }, unmountDelay);
-            }
-            return promise.then(function (result) {
+            var wrapped = inner.then(function (result) {
                 dispose();
                 return result;
-            }, function (result) {
+            }, function (err) {
                 dispose();
-                return Promise.reject(result);
+                return Promise.reject(err);
             });
+            // Register to controls layer for external control
+            (0, controls_1.register)(wrapped, { resolve: resolveRef, reject: rejectRef, dispose: dispose });
+            return wrapped;
         };
     };
 };

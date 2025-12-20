@@ -1,4 +1,5 @@
 # CLAUDE.md
+**Use English for files.**
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 

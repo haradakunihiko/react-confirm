@@ -8,6 +8,7 @@ export type ConfirmationHandle<R> = {
   resolve: (value: R) => void;
   reject: (reason?: any) => void;
   dispose: () => void;
+  setShow?: (show: boolean) => void;
   settled?: boolean;
 };
 
@@ -45,6 +46,7 @@ export function proceed<R>(promise: Promise<R>, response: R): boolean {
   if (!handle || handle.settled) return false;
 
   try {
+    handle.setShow?.(false);
     handle.resolve(response);
   } finally {
     try {
@@ -69,6 +71,7 @@ export function dismiss<R>(promise: Promise<R>): boolean {
   if (!handle || handle.settled) return false;
 
   try {
+    handle.setShow?.(false);
     handle.dispose();
   } catch {
     // Ignore
@@ -89,6 +92,7 @@ export function cancel<R>(promise: Promise<R>, reason?: unknown): boolean {
   if (!handle || handle.settled) return false;
 
   try {
+    handle.setShow?.(false);
     handle.reject(reason);
   } finally {
     try {

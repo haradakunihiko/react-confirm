@@ -5,6 +5,8 @@ export type ConfirmableProps<P, R> = {
   dispose: () => void;
   resolve: (value: R | PromiseLike<R>) => void;
   reject: (reason?: any) => void;
+  /** Register a callback to control show state from outside */
+  registerSetShow?: (setShow: (show: boolean) => void) => void;
 } & P;
 
 export type ConfirmDialogProps<P, R> = {

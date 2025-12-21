@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { ConfirmableProps, ConfirmDialog, ConfirmableDialog } from './types';
 
 const confirmable: <P, R>(Component: ConfirmDialog<P, R>) => ConfirmableDialog<P, R> =
 <P, R>(Component: ConfirmDialog<P, R>) =>
-  ({ dispose, reject, resolve, ...other }: ConfirmableProps<P, R>) => {
+  ({ dispose, reject, resolve, registerSetShow, ...other }: ConfirmableProps<P, R>) => {
     const [show, setShow] = useState(true);
+
+    // Register setShow for external control
+    useEffect(() => {
+      registerSetShow?.(setShow);
+    }, [registerSetShow]);
 
     const dismiss = () => {
       setShow(false);

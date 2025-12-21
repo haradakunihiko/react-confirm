@@ -8,6 +8,8 @@ export const createConfirmationCreater = (mounter: Mounter) =>
     return (props: P): Promise<R> => {
       let mountId: string;
       let resolveRef: (value: R) => void = () => {};
+      let rejectRef: (reason?: any) => void = () => {};
+      let setShowRef: ((show: boolean) => void) | undefined;
 
       function dispose() {
         setTimeout(() => {
@@ -15,13 +17,16 @@ export const createConfirmationCreater = (mounter: Mounter) =>
         }, unmountDelay);
       }
 
-      let rejectRef: (reason?: any) => void = () => {};
+      // Callback for confirmable to register its setShow function
+      const registerSetShow = (setShow: (show: boolean) => void) => {
+        setShowRef = setShow;
+      };
 
       const inner = new Promise<R>((resolve, reject) => {
         resolveRef = resolve;
         rejectRef = reject;
         try {
-          mountId = mounter.mount(Component as React.ComponentType<any>, { reject, resolve, dispose, ...props }, mountingNode);
+          mountId = mounter.mount(Component as React.ComponentType<any>, { reject, resolve, dispose, registerSetShow, ...props }, mountingNode);
         } catch (e) {
           // keep behavior identical to JS version
           console.error(e);
@@ -41,7 +46,12 @@ export const createConfirmationCreater = (mounter: Mounter) =>
       );
 
       // Register to controls layer for external control
-      register(wrapped, { resolve: resolveRef, reject: rejectRef, dispose });
+      register(wrapped, {
+        resolve: resolveRef,
+        reject: rejectRef,
+        dispose,
+        get setShow() { return setShowRef; }
+      });
 
       return wrapped;
     };

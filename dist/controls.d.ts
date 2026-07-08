@@ -5,12 +5,14 @@ export type ConfirmationHandle<R> = {
     resolve: (value: R) => void;
     reject: (reason?: any) => void;
     dispose: () => void;
+    setShow?: (show: boolean) => void;
     settled?: boolean;
 };
 /**
  * Register a Promise and its handle to the registry
  */
 export declare function register<R>(promise: Promise<R>, handle: ConfirmationHandle<R>): void;
+export declare function unregister<R>(promise: Promise<R>): void;
 /**
  * Resolve a confirmation dialog and close it
  * @param promise The Promise to resolve

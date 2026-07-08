@@ -24,15 +24,21 @@ export function register<R>(
   active.set(promise, handle as ConfirmationHandle<unknown>);
 
   // Auto cleanup after settlement
+  const cleanup = () => {
+    const h = active.get(promise);
+    if (h) h.settled = true;
+    active.delete(promise);
+  };
+
   promise
-    .finally(() => {
-      const h = active.get(promise);
-      if (h) h.settled = true;
-      active.delete(promise);
-    })
+    .then(cleanup, cleanup)
     .catch(() => {
-      // Already handled by finally
+      // Already handled by cleanup
     });
+}
+
+export function unregister<R>(promise: Promise<R>): void {
+  active.delete(promise);
 }
 
 /**

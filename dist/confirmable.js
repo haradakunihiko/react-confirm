@@ -26,8 +26,12 @@ var jsx_runtime_1 = require("react/jsx-runtime");
 var react_1 = require("react");
 var confirmable = function (Component) {
     return function (_a) {
-        var dispose = _a.dispose, reject = _a.reject, resolve = _a.resolve, other = __rest(_a, ["dispose", "reject", "resolve"]);
+        var dispose = _a.dispose, reject = _a.reject, resolve = _a.resolve, registerSetShow = _a.registerSetShow, other = __rest(_a, ["dispose", "reject", "resolve", "registerSetShow"]);
         var _b = (0, react_1.useState)(true), show = _b[0], setShow = _b[1];
+        // Register setShow for external control
+        (0, react_1.useEffect)(function () {
+            registerSetShow === null || registerSetShow === void 0 ? void 0 : registerSetShow(setShow);
+        }, [registerSetShow]);
         var dismiss = function () {
             setShow(false);
             dispose();

@@ -20,17 +20,25 @@ var createConfirmationCreater = function (mounter) {
         return function (props) {
             var mountId;
             var resolveRef = function () { };
+            var rejectRef = function () { };
+            var setShowRef;
+            var wrapped;
             function dispose() {
+                if (wrapped)
+                    (0, controls_1.unregister)(wrapped);
                 setTimeout(function () {
                     mounter.unmount(mountId);
                 }, unmountDelay);
             }
-            var rejectRef = function () { };
+            // Callback for confirmable to register its setShow function
+            var registerSetShow = function (setShow) {
+                setShowRef = setShow;
+            };
             var inner = new Promise(function (resolve, reject) {
                 resolveRef = resolve;
                 rejectRef = reject;
                 try {
-                    mountId = mounter.mount(Component, __assign({ reject: reject, resolve: resolve, dispose: dispose }, props), mountingNode);
+                    mountId = mounter.mount(Component, __assign({ reject: reject, resolve: resolve, dispose: dispose, registerSetShow: registerSetShow }, props), mountingNode);
                 }
                 catch (e) {
                     // keep behavior identical to JS version
@@ -38,7 +46,7 @@ var createConfirmationCreater = function (mounter) {
                     throw e;
                 }
             });
-            var wrapped = inner.then(function (result) {
+            wrapped = inner.then(function (result) {
                 dispose();
                 return result;
             }, function (err) {
@@ -46,7 +54,12 @@ var createConfirmationCreater = function (mounter) {
                 return Promise.reject(err);
             });
             // Register to controls layer for external control
-            (0, controls_1.register)(wrapped, { resolve: resolveRef, reject: rejectRef, dispose: dispose });
+            (0, controls_1.register)(wrapped, {
+                resolve: resolveRef,
+                reject: rejectRef,
+                dispose: dispose,
+                get setShow() { return setShowRef; }
+            });
             return wrapped;
         };
     };

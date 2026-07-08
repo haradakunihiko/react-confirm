@@ -21,17 +21,20 @@ function createDomTreeMounter(defaultMountNode) {
         var key = Math.floor(Math.random() * (1 << 30)).toString(16);
         var parent = (mountNode || defaultMountNode || document.body);
         var wrapper = parent.appendChild(document.createElement('div'));
-        confirms[key] = wrapper;
         var root = (0, client_1.createRoot)(wrapper);
         root.render((0, jsx_runtime_1.jsx)(Component, __assign({}, props)));
+        confirms[key] = { wrapper: wrapper, root: root };
         callbacks.mounted && callbacks.mounted();
         return key;
     }
     function unmount(key) {
-        var wrapper = confirms[key];
+        var entry = confirms[key];
         delete confirms[key];
-        if (wrapper && wrapper.parentNode) {
-            wrapper.parentNode.removeChild(wrapper);
+        if (entry) {
+            entry.root.unmount();
+            if (entry.wrapper.parentNode) {
+                entry.wrapper.parentNode.removeChild(entry.wrapper);
+            }
         }
     }
     return {

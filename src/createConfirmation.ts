@@ -1,7 +1,7 @@
 import type React from 'react';
 import { createDomTreeMounter } from './mounter/domTree';
 import type { ConfirmableDialog, Mounter } from './types';
-import { register } from './controls';
+import { register, unregister } from './controls';
 
 export const createConfirmationCreater = (mounter: Mounter) =>
   <P, R>(Component: ConfirmableDialog<P, R>, unmountDelay: number = 1000, mountingNode?: HTMLElement) => {
@@ -10,8 +10,10 @@ export const createConfirmationCreater = (mounter: Mounter) =>
       let resolveRef: (value: R) => void = () => {};
       let rejectRef: (reason?: any) => void = () => {};
       let setShowRef: ((show: boolean) => void) | undefined;
+      let wrapped: Promise<R> | undefined;
 
       function dispose() {
+        if (wrapped) unregister(wrapped);
         setTimeout(() => {
           mounter.unmount(mountId);
         }, unmountDelay);
@@ -34,7 +36,7 @@ export const createConfirmationCreater = (mounter: Mounter) =>
         }
       });
 
-      const wrapped = inner.then(
+      wrapped = inner.then(
         (result) => {
           dispose();
           return result;

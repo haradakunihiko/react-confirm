@@ -3,6 +3,7 @@
 // Stores only control handles (resolve/reject/dispose), not UI state
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = register;
+exports.unregister = unregister;
 exports.proceed = proceed;
 exports.dismiss = dismiss;
 exports.cancel = cancel;
@@ -13,16 +14,20 @@ var active = new Map();
 function register(promise, handle) {
     active.set(promise, handle);
     // Auto cleanup after settlement
-    promise
-        .finally(function () {
+    var cleanup = function () {
         var h = active.get(promise);
         if (h)
             h.settled = true;
         active.delete(promise);
-    })
+    };
+    promise
+        .then(cleanup, cleanup)
         .catch(function () {
-        // Already handled by finally
+        // Already handled by cleanup
     });
+}
+function unregister(promise) {
+    active.delete(promise);
 }
 /**
  * Resolve a confirmation dialog and close it
@@ -31,17 +36,19 @@ function register(promise, handle) {
  * @returns true if successful
  */
 function proceed(promise, response) {
+    var _a;
     var handle = active.get(promise);
     if (!handle || handle.settled)
         return false;
     try {
+        (_a = handle.setShow) === null || _a === void 0 ? void 0 : _a.call(handle, false);
         handle.resolve(response);
     }
     finally {
         try {
             handle.dispose();
         }
-        catch (_a) {
+        catch (_b) {
             // Ignore
         }
         active.delete(promise);
@@ -55,13 +62,15 @@ function proceed(promise, response) {
  * @returns true if successful
  */
 function dismiss(promise) {
+    var _a;
     var handle = active.get(promise);
     if (!handle || handle.settled)
         return false;
     try {
+        (_a = handle.setShow) === null || _a === void 0 ? void 0 : _a.call(handle, false);
         handle.dispose();
     }
-    catch (_a) {
+    catch (_b) {
         // Ignore
     }
     active.delete(promise);
@@ -74,17 +83,19 @@ function dismiss(promise) {
  * @returns true if successful
  */
 function cancel(promise, reason) {
+    var _a;
     var handle = active.get(promise);
     if (!handle || handle.settled)
         return false;
     try {
+        (_a = handle.setShow) === null || _a === void 0 ? void 0 : _a.call(handle, false);
         handle.reject(reason);
     }
     finally {
         try {
             handle.dispose();
         }
-        catch (_a) {
+        catch (_b) {
             // Ignore
         }
         active.delete(promise);

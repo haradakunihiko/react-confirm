@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { fireEvent, screen } from '@testing-library/react';
 import { confirmable, createConfirmation, proceed, dismiss, cancel } from 'src';
 
 describe('External control behavior', () => {
@@ -36,6 +37,24 @@ describe('External control behavior', () => {
     const res = await Promise.race([
       p.then(() => 'resolved').catch(() => 'rejected'),
       new Promise((resolve) => setTimeout(() => resolve('pending'), 50)),
+    ]);
+    expect(res).toBe('pending');
+  });
+
+  it('removes internally dismissed dialogs from external controls', async () => {
+    const DismissibleDialog = ({ show, dismiss }: any) => (
+      show ? React.createElement('button', { 'data-testid': 'dismiss', onClick: dismiss }, 'Dismiss') : null
+    );
+    const confirm = createConfirmation(confirmable(DismissibleDialog));
+    const p = confirm({});
+
+    fireEvent.click(await screen.findByTestId('dismiss'));
+
+    expect(proceed(p, false)).toBe(false);
+
+    const res = await Promise.race([
+      p.then(() => 'resolved').catch(() => 'rejected'),
+      new Promise((resolve) => setTimeout(() => resolve('pending'), 10)),
     ]);
     expect(res).toBe('pending');
   });
